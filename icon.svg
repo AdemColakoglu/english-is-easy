@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="48%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cardBackGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="cardFrontGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+    <linearGradient id="letterGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Modern Squircle Arka Plan -->
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#bgGrad)"/>
+  <rect x="7" y="7" width="114" height="58" rx="26" fill="url(#glowGrad)"/>
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+
+  <!-- Arka Dil Kartı (Sağ Üst - Turkuaz 'A' Taşı) -->
+  <g transform="translate(62, 20) rotate(8)">
+    <rect x="0" y="3" width="46" height="46" rx="13" fill="#0f172a" fill-opacity="0.28"/>
+    <rect x="0" y="0" width="46" height="46" rx="13" fill="url(#cardBackGrad)" stroke="#bae6fd" stroke-width="2"/>
+    <text x="23" y="33" text-anchor="middle" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="900" font-size="27" fill="#ffffff">A</text>
+  </g>
+
+  <!-- Ön Ana Kart (Sol Orta - 3D Beyaz 'E' Kelime Taşı) -->
+  <g transform="translate(18, 34) rotate(-5)">
+    <rect x="0" y="6" width="66" height="66" rx="18" fill="#1e1b4b" fill-opacity="0.38"/>
+    <rect x="0" y="0" width="66" height="66" rx="18" fill="url(#cardFrontGrad)" stroke="#c7d2fe" stroke-width="2.5"/>
+    <text x="33" y="48" text-anchor="middle" font-family="Segoe UI, Inter, Arial, sans-serif" font-weight="900" font-size="44" fill="url(#letterGrad)">E</text>
+    <circle cx="53" cy="53" r="4" fill="#f43f5e"/>
+  </g>
+
+  <!-- Sağ Alt: Altın Yıldız & Başarı Rozeti -->
+  <g transform="translate(76, 74)">
+    <circle cx="19" cy="21" r="18" fill="#1e1b4b" fill-opacity="0.35"/>
+    <circle cx="19" cy="18" r="18" fill="url(#goldGrad)" stroke="#ffffff" stroke-width="2.5"/>
+    <path d="M19 6 L22.6 13.4 L30.8 14.5 L24.8 20.2 L26.3 28.3 L19 24.4 L11.7 28.3 L13.2 20.2 L7.2 14.5 L15.4 13.4 Z" fill="#ffffff"/>
+  </g>
+
+  <!-- Parıltı Yıldızları -->
+  <path d="M28 16 L30 21 L35 23 L30 25 L28 30 L26 25 L21 23 L26 21 Z" fill="#fef08a"/>
+  <circle cx="106" cy="64" r="3" fill="#fbcfe8"/>
+</svg>

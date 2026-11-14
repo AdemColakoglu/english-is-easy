@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="English is easy" />
+  <title>English is easy</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Havai Fişek ve Konfeti Kutlama Kanvası (Tüm Oyunlar ve Seri Kutlamaları İçin) -->
+  <canvas id="celebrationCanvas" class="celebration-canvas hidden"></canvas>
+
+  <!-- Seri (Streak 5x) Motivasyon Rozeti -->
+  <div id="streakMotivationBanner" class="streak-motivation-banner hidden">
+    <div class="streak-banner-inner">
+      <span class="streak-banner-icon" id="streakBannerIcon">🎆</span>
+      <div>
+        <strong id="streakBannerTitle">MUHTEŞEM SERİ: 5 ARKA ARKAYA DOĞRU!</strong>
+        <p id="streakBannerSub">Harika gidiyorsun, bu tempoyu koru! 🔥</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+
+    <!-- =========================================================================
+         1. ANA SAYFA (HOME HUB) — "English is easy"
+         ========================================================================= -->
+    <section id="homeView" class="home-view modern-home-view">
+      <!-- Modern Üst Çubuk (Header) -->
+      <header class="home-topbar-modern home-modern-header">
+        <div class="home-header-top-row">
+          <div class="home-topbar-left">
+            <button type="button" id="btnHomeMenu" class="modern-header-btn" title="Menü (Kurallar, Nasıl Oynanır, İstatistikler)" aria-label="Menü">
+              <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="home-topbar-center">
+            <div class="modern-brand-badge">
+              <img src="icon.svg" alt="English is easy Logo" class="brand-logo-img" />
+              <div class="brand-title-wrap">
+                <h1>English is easy</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-topbar-right">
+          <!-- Merkezi Kelime Havuzu Seçici (Çarkın Solunda - Tüm Oyunlar İçin Geçerli) -->
+          <div class="central-pool-select-wrap">
+            <button type="button" id="btnCentralPoolToggle" class="central-pool-trigger-btn" aria-haspopup="true" aria-expanded="false" title="Tüm oyunlar için geçerli kelime havuzlarını seçin">
+              <svg class="central-pool-icon-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                <path d="M6 2v20"/>
+                <line x1="12" y1="9" x2="16" y2="9"/>
+                <line x1="14" y1="7" x2="14" y2="11"/>
+              </svg>
+              <span id="centralPoolSummaryText" class="central-pool-summary">Kelime Havuzu (721)</span>
+              <svg class="chevron-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <!-- Açılır Çoklu Havuz Menüsü (Merkezi) -->
+            <div id="centralPoolDropdownMenu" class="gpc-pool-dropdown-panel central-pool-dropdown hidden" role="menu">
+              <div class="gp-dropdown-header">
+                <strong>Kullanılacak Havuzlar</strong>
+                <button type="button" id="btnCentralSelectAllPools" class="btn-text-action">Tümünü Seç</button>
+              </div>
+              <div id="centralPoolChecklist" class="gpc-pool-checklist">
+                <!-- JS ile checkbox listesi render edilir -->
+              </div>
+              <div class="gp-dropdown-footer">
+                <span id="centralPoolSelectedCountHint" class="gpc-pool-count-hint">Tüm kelimeler dahil</span>
+                <button type="button" id="btnCentralApplyPools" class="btn-apply-pools">Tamam</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="btnTogglePool" class="modern-header-btn btn-gear" title="Kelime ve Konu Havuzu Yönetimi" aria-label="Havuz Yönetimi">
+            <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button type="button" class="modern-header-btn btn-music active" data-action="toggle-music" title="Müzik Aç/Kapat" aria-label="Müzik Aç/Kapat">
+            <svg class="icon-svg icon-music-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </button>
+          <button type="button" class="modern-header-btn btn-sound active" data-action="toggle-sound" title="Ses Aç/Kapat" aria-label="Ses Aç/Kapat">
+            <svg class="icon-svg icon-sound-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Orta Alan: Seçili Oyunun Profil Vitrin Sahnesi -->
+      <main class="home-hero-stage">
+        <div class="game-showcase-container">
+          <!-- Oyun Profil Kartı (Resimli tematik arka planla) -->
+          <div id="homeGameProfileCard" class="game-profile-card">
+            <div class="gpc-art-backdrop" id="gpcArtBackdrop"></div>
+            <div class="gpc-glass-overlay"></div>
+
+            <div class="gpc-content-wrap">
+              <div class="gpc-header">
+                <div class="gpc-icon-avatar" id="gpcIcon">
+                  <!-- Game-icons.net SVG dinamik yüklenecek -->
+                </div>
+                <div class="gpc-meta">
+                  <span class="gpc-badge" id="gpcBadge">10 Harf Sürükle-Bırak • Çarpanlı Izgara</span>
+                  <h2 class="gpc-title" id="gpcTitle">Kelimelik</h2>
+                </div>
+              </div>
+
+              <p class="gpc-desc" id="gpcDesc">
+                10 harfli ıstakanızdan taşları tahtaya sürükleyip bırakarak yatay ve dikey İngilizce kelimeler üretin! Çarpanlı bonus karelerle puanınızı katlayın.
+              </p>
+
+              <!-- Oyun Öncesi Hızlı Ayarlar (Oyun Modu & Zorluk/Sayı) -->
+              <div class="gpc-config-panel" id="gpcConfigPanel">
+                <!-- 1. Oyun Modu Seçici (Kullanıcı İsteği: Havuz üst bara alındı, buraya TR-EN / EN-TR / Karışık modu konuldu) -->
+                <div class="gpc-config-group gpc-mode-group">
+                  <label class="gpc-config-label" for="gpcGameModeSelect">
+                    <svg class="gpc-cfg-icon-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="2" y1="12" x2="22" y2="12"/>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <span id="gpcGameModeLabelText">Oyun Modu:</span>
+                  </label>
+                  <div class="gpc-mode-control-row">
+                    <select id="gpcGameModeSelect" class="gpc-select-control" title="Oyun Modunu Seçin">
+                      <option value="MIXED" selected>🔀 Karışık (İki Yönlü)</option>
+                      <option value="TR_TO_EN">🇹🇷 Türkçe ➔ 🇬🇧 İngilizce</option>
+                      <option value="EN_TO_TR">🇬🇧 İngilizce ➔ 🇹🇷 Türkçe</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- 2. Zorluk / Süre / Aynı Hücrede Kalemle Sayı Belirleme -->
+                <div class="gpc-config-group" id="gpcOptionGroup">
+                  <label class="gpc-config-label" id="gpcOptionLabel">
+                    <span class="gpc-cfg-icon" id="gpcOptionIcon">⏱️</span>
+                    <span id="gpcOptionTitle">Zorluk / Süre:</span>
+                  </label>
+                  <div class="gpc-option-control-row">
+                    <!-- Kelimelik, Çengel ve Eşleştirme için Açılır Seçim -->
+                    <select id="gpcGameOptionSelect" class="gpc-select-control" title="Oyun zorluğu, süre veya kart sayısını seçin">
+                      <!-- Seçili oyuna göre JS ile doldurulur -->
+                    </select>
+
+                    <!-- Hızlı Kelime Testi ve Harf Avı İçin Aynı Hücrede Doğrudan Sayı Gösterimi & Düzenleme -->
+                    <div id="gpcInlineCountWrapper" class="gpc-inline-count-wrap hidden">
+                      <span id="gpcInlineCountDisplay" class="gpc-inline-count-display">20</span>
+                      <input type="number" id="gpcInlineCountInput" class="gpc-inline-count-input hidden" min="10" placeholder="20" />
+                    </div>
+
+                    <!-- Kalem / Onay Butonu (Tıklanınca Onay Butonuna Döner) -->
+                    <button type="button" id="btnCustomCountToggle" class="btn-custom-count" title="Sayıyı Düzenle" aria-label="Sayıyı Düzenle">
+                      <svg class="icon-pencil-svg" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hızlı İstatistik Göstergeleri (Kullanıcı İsteği: Havuz Seçim Alanı Ferah Olsun Diye Aşağı Alındı) -->
+              <div class="gpc-stats-row" id="gpcStatsRow">
+                <div class="gpc-stat-item">
+                  <span class="gpc-stat-label">EN YÜKSEK SKOR</span>
+                  <strong class="gpc-stat-val" id="gpcStatHighscore">0</strong>
+                </div>
+                <div class="gpc-stat-item">
+                  <span class="gpc-stat-label">ÇÖZÜLEN KELİME</span>
+                  <strong class="gpc-stat-val" id="gpcStatSolved">0</strong>
+                </div>
+                <div class="gpc-stat-item">
+                  <span class="gpc-stat-label">ZORLUK / MOD</span>
+                  <strong class="gpc-stat-val" id="gpcStatDifficulty">11×11 (10 Dk)</strong>
+                </div>
+              </div>
+
+              <!-- Kocaman '▶ OYNA' Butonu -->
+              <div class="gpc-action-wrap">
+                <button type="button" id="btnLaunchActiveGame" class="btn-hero-play" title="Seçili oyunu seçilen ayarlarla başlat">
+                  <span class="btn-play-icon">▶</span>
+                  <span class="btn-play-text">OYNA</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Alt Navigasyon Barı: Game-icons.net Tarzı Özel 5 Oyun Simgesi -->
+      <nav class="home-bottom-nav" aria-label="Oyun Seçici">
+        <div class="home-nav-track">
+          <!-- 1. Kelimelik (Game-icons wood-tile / scrabble) -->
+          <button type="button" class="home-nav-item active" data-game="kelimelik" title="Kelimelik">
+            <span class="hni-icon-box box-kelimelik">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#f59e0b"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#fbbf24"/>
+                <path d="M160 140h48v100l80-100h60l-88 108 96 124h-62l-86-112v112h-48z" fill="#78350f"/>
+                <text x="345" y="380" font-family="system-ui, sans-serif" font-weight="900" font-size="105" fill="#92400e">1</text>
+              </svg>
+            </span>
+            <span class="hni-label">Kelimelik</span>
+          </button>
+          <!-- 2. Çengel Bulmaca (Game-icons crossword puzzle) -->
+          <button type="button" class="home-nav-item" data-game="crossword" title="Çengel Bulmaca">
+            <span class="hni-icon-box box-crossword">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#10b981"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#34d399"/>
+                <path d="M120 120h80v80h-80zM216 120h80v80h-80zM312 120h80v80h-80zM216 216h80v80h-80zM216 312h80v80h-80zM120 312h80v80h-80z" fill="#ffffff"/>
+                <polygon points="256 142 272 168 240 168" fill="#047857"/>
+                <polygon points="256 370 272 344 240 344" fill="#047857"/>
+                <polygon points="142 160 168 144 168 176" fill="#047857"/>
+              </svg>
+            </span>
+            <span class="hni-label">Çengel</span>
+          </button>
+          <!-- 3. Hızlı Kelime Testi (Game-icons lightning quiz) -->
+          <button type="button" class="home-nav-item" data-game="quiz" title="Hızlı Kelime Testi">
+            <span class="hni-icon-box box-quiz">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#8b5cf6"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#a78bfa"/>
+                <circle cx="256" cy="256" r="145" fill="#6d28d9"/>
+                <polygon points="280 110 170 270 245 270 215 402 342 232 268 232" fill="#fde047" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="hni-label">Kelime Testi</span>
+          </button>
+          <!-- 4. Kelime Eşleştirme (Game-icons card-exchange) -->
+          <button type="button" class="home-nav-item" data-game="match" title="Kelime Eşleştirme">
+            <span class="hni-icon-box box-match">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#ec4899"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#f472b6"/>
+                <rect x="115" y="160" width="160" height="230" rx="20" transform="rotate(-14 195 275)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/>
+                <rect x="235" y="140" width="160" height="230" rx="20" transform="rotate(14 315 255)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/>
+                <circle cx="195" cy="275" r="32" fill="#ef4444"/>
+                <polygon points="315 224 327 248 353 252 334 270 338 296 315 284 292 296 296 270 277 252 303 248" fill="#eab308"/>
+              </svg>
+            </span>
+            <span class="hni-label">Eşleştirme</span>
+          </button>
+          <!-- 5. Harf Avı (Game-icons anagram / word-hunt) -->
+          <button type="button" class="home-nav-item" data-game="scramble" title="Harf Avı">
+            <span class="hni-icon-box box-scramble">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#0284c7"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#38bdf8"/>
+                <circle cx="256" cy="256" r="145" fill="none" stroke="#e0f2fe" stroke-width="16" stroke-dasharray="24 16"/>
+                <circle cx="256" cy="148" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/>
+                <text x="240" y="163" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">A</text>
+                <circle cx="348" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/>
+                <text x="333" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">B</text>
+                <circle cx="164" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/>
+                <text x="149" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">C</text>
+                <polygon points="256 220 276 276 256 264 236 276" fill="#facc15"/>
+              </svg>
+            </span>
+            <span class="hni-label">Harf Avı</span>
+          </button>
+          <!-- 6. AI Sohbet & Pratik (Local In-Browser AI Chatbot Emma) -->
+          <button type="button" class="home-nav-item" data-game="chatbot" title="AI Sohbet">
+            <span class="hni-icon-box box-chatbot">
+              <svg viewBox="0 0 512 512" class="gi-svg" aria-hidden="true">
+                <rect x="56" y="56" width="400" height="400" rx="64" fill="#0d9488"/>
+                <rect x="76" y="76" width="360" height="360" rx="50" fill="#14b8a6"/>
+                <path d="M140 160h232c22 0 40 18 40 40v120c0 22-18 40-40 40h-75l-55 45v-45h-102c-22 0-40-18-40-40V200c0-22 18-40 40-40z" fill="#042f2e" stroke="#ffffff" stroke-width="8"/>
+                <circle cx="215" cy="240" r="20" fill="#2dd4bf"/>
+                <circle cx="297" cy="240" r="20" fill="#2dd4bf"/>
+                <circle cx="220" cy="235" r="7" fill="#ffffff"/>
+                <circle cx="302" cy="235" r="7" fill="#ffffff"/>
+                <path d="M225 285c15 12 47 12 62 0" fill="none" stroke="#2dd4bf" stroke-width="8" stroke-linecap="round"/>
+                <circle cx="256" cy="120" r="14" fill="#facc15"/>
+                <line x1="256" y1="134" x2="256" y2="160" stroke="#facc15" stroke-width="8"/>
+              </svg>
+            </span>
+            <span class="hni-label">AI Sohbet</span>
+          </button>
+        </div>
+      </nav>
+    </section>
+
+    <!-- =========================================================================
+         1.5 KELİMELİK OYUNU EKRANI (10 Harf Sürükle-Bırak + Bonus Puanlı Kelimelik Izgarası)
+         ========================================================================= -->
+    <section id="kelimelikView" class="game-screen crossword-screen kelimelik-screen hidden">
+      <header class="topbar kelimelik-topbar">
+        <div class="brand">
+          <div class="brand-top-row">
+            <div class="brand-icon kelimelik-brand-icon">
+              <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="36" height="36"><rect x="40" y="40" width="432" height="432" rx="64" fill="#f59e0b"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#fbbf24"/><path d="M160 140h48v100l80-100h60l-88 108 96 124h-62l-86-112v112h-48z" fill="#78350f"/><text x="345" y="380" font-family="system-ui, sans-serif" font-weight="900" font-size="105" fill="#92400e">1</text></svg>
+            </div>
+            <h1>Kelimelik</h1>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-pill stat-pill-score" title="Toplam Kelimelik Puanı">
+            <span class="stat-label">⭐ Puan</span>
+            <span class="stat-value" id="kelimelikStatScore">0</span>
+          </div>
+          <div class="stat-pill stat-pill-remaining" title="Kalan Süre (Zorluğa göre geri sayım)">
+            <span class="stat-label">⏳ Süre</span>
+            <span class="stat-value" id="kelimelikStatTimer">10:00</span>
+          </div>
+          <div class="stat-pill stat-pill-solved" title="Üretilen kelimeler (Hedef: 10 Kelime)">
+            <span class="stat-label">🏆 Kelime</span>
+            <span class="stat-value" id="kelimelikStatSolved">0 / 10</span>
+          </div>
+          <div class="stat-pill stat-pill-pool" title="Kelimelik her zaman tüm veri havuzlarını kullanır">
+            <span class="stat-label">🌟 Tüm Havuzlar</span>
+            <span class="stat-value" id="kelimelikStatPool">644</span>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <div class="size-selector kelimelik-fixed-pool-pill" title="Kelimelik oyununda her zaman tüm kelime havuzları aktiftir">
+            <span>🎯 Kaynak:</span>
+            <strong>🌟 Tüm Havuzlar</strong>
+          </div>
+
+          <div class="size-selector" title="Kelimelik ızgara boyutu ve süre zorluğu">
+            <label for="kelimelikGridSizeSelect">⏱️ Zorluk / Süre:</label>
+            <select id="kelimelikGridSizeSelect">
+              <option value="11" data-mins="10" selected>11×11 (10 Dk)</option>
+              <option value="13" data-mins="15">13×13 (15 Dk)</option>
+              <option value="15" data-mins="20">15×15 (20 Dk)</option>
+            </select>
+          </div>
+
+          <button type="button" id="btnKelimelikScores" class="btn btn-accent btn-sm" title="Puan Tablosunu Görüntüle">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span>Puan Tablosu</span>
+          </button>
+          <button type="button" id="btnNewKelimelik" class="btn btn-kelimelik-new" title="Yeni Kelimelik tahtası ve 10 harf başlat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Yeni Oyun</span>
+          </button>
+          <button type="button" id="btnKelimelikHint" class="btn btn-warning" title="Mevcut 10 harfle yazılabilecek bir kelimeyi 5 saniyeliğine göster (Kısayol: . tuşu)">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>İpucu (.)</span>
+          </button>
+          <button type="button" class="btn btn-music active" data-action="toggle-music" title="Oyun müziğini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span class="music-btn-label">Müzik</span>
+          </button>
+          <button type="button" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="sound-btn-label">Ses</span>
+          </button>
+          <button type="button" class="btn btn-home-return" data-action="go-home" title="Ana Sayfaya Dön">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Ana Sayfa</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="main-workspace kelimelik-workspace">
+        <div class="puzzle-stage kelimelik-stage">
+          <div class="puzzle-header-card kelimelik-status-card" id="kelimelikActiveClueBanner">
+            <div class="clue-main-row">
+              <span class="clue-badge kelimelik-status-badge" id="kelimelikActiveClueDir">🔠 Serbest Kelime Üret</span>
+              <div class="clue-text" id="kelimelikActiveClueText">
+                İstakadaki <strong>10 harfi</strong> tahtaya yatay veya dikey sürükleyerek Tüm Havuzlar'dan istediğiniz kelimeyi oluşturun! (<strong>2H/3H:</strong> Harf Katı, <strong>2K/3K:</strong> Kelime Katı)
+              </div>
+              <span class="clue-length kelimelik-preview-score" id="kelimelikActiveClueLen">★ Bonuslu Tahta</span>
+            </div>
+          </div>
+
+          <div class="grid-scroll-container kelimelik-grid-container" id="kelimelikGridScrollContainer">
+            <div id="kelimelikGrid" class="crossword-grid kelimelik-grid" aria-label="Kelimelik Bonuslu Tahtası"></div>
+          </div>
+
+          <!-- 10 Harfli Sürükle-Bırak İstakası (Rack) -->
+          <div class="kelimelik-rack-bar" id="kelimelikRackBar">
+            <div class="kelimelik-rack-header">
+              <span class="kelimelik-rack-title">✋ <strong>10 Harf İstakası:</strong> Harfleri tahtaya sürükleyin, kelime oluşunca <strong>Kelimeyi Onayla</strong>'ya tıklayın!</span>
+              <div class="kelimelik-rack-actions">
+                <button type="button" id="btnKelimelikReturnTiles" class="btn btn-secondary btn-xs" title="Tahtaya bıraktığınız harfleri istakaya geri topla">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+                  <span>Geri Al</span>
+                </button>
+                <button type="button" id="btnKelimelikShuffleRack" class="btn btn-secondary btn-xs" title="İstakadaki harfleri karıştır">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                  <span>Karıştır</span>
+                </button>
+              </div>
+            </div>
+            <div class="kelimelik-rack-slots" id="kelimelikRackTiles" aria-label="10 Harf İstakası"></div>
+            <div class="kelimelik-submit-container">
+              <button type="button" id="btnKelimelikSubmitWord" class="btn btn-kelimelik-submit" disabled title="Tahtaya dizdiğiniz kelimeyi onayla ve puanı kazan (Enter)">
+                <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Kelimeyi Onayla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Saniyelik Yazılabilir Kelime İpucu Pop-up'ı -->
+        <div id="kelimelikHintPopup" class="kelimelik-hint-popup hidden" role="status" aria-live="polite">
+          <div class="kelimelik-hint-popup-card">
+            <div class="kelimelik-hint-popup-top">
+              <span class="kelimelik-hint-badge">💡 YAZILABİLİR KELİME İPUCU</span>
+              <span class="kelimelik-hint-timer-text" id="kelimelikHintCountdownText">5 sn</span>
+            </div>
+            <div class="kelimelik-hint-word-tiles" id="kelimelikHintWordTiles"></div>
+            <div class="kelimelik-hint-meaning" id="kelimelikHintMeaning"></div>
+            <div class="kelimelik-hint-progress-track">
+              <div class="kelimelik-hint-progress-bar" id="kelimelikHintProgressBar"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         2. ÇENGEL BULMACA OYUNU EKRANI (Mevcut Oyun Birebir Korundu)
+         ========================================================================= -->
+    <section id="crosswordView" class="game-screen crossword-screen hidden">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-top-row">
+            <div class="brand-icon cw-brand-icon">
+              <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="36" height="36"><rect x="40" y="40" width="432" height="432" rx="64" fill="#10b981"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#34d399"/><path d="M120 120h80v80h-80zM216 120h80v80h-80zM312 120h80v80h-80zM216 216h80v80h-80zM216 312h80v80h-80zM120 312h80v80h-80z" fill="#ffffff"/><polygon points="256 142 272 168 240 168" fill="#047857"/><polygon points="256 370 272 344 240 344" fill="#047857"/><polygon points="142 160 168 144 168 176" fill="#047857"/></svg>
+            </div>
+            <h1>✨ Çengel Bulmaca</h1>
+          </div>
+          <div class="mode-selector" id="gameModeSelector" role="radiogroup" aria-label="Oyun Modu Seçimi">
+            <button type="button" class="mode-btn" data-mode="TR_TO_EN">🇹🇷 Türkçe ➔ 🇬🇧 İngilizce</button>
+            <button type="button" class="mode-btn" data-mode="EN_TO_TR">🇬🇧 İngilizce ➔ 🇹🇷 Türkçe</button>
+            <button type="button" class="mode-btn active" data-mode="MIXED">🔀 Karışık</button>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-pill stat-pill-score" title="Çengel Bulmaca Puanı">
+            <span class="stat-label">⭐ Puan</span>
+            <span class="stat-value" id="cwStatScore">0</span>
+          </div>
+          <div class="stat-pill stat-pill-solved" title="Yerleşen ve çözülen kelimeler">
+            <span class="stat-label">🏆 Çözülen</span>
+            <span class="stat-value" id="statSolved">0 / 0</span>
+          </div>
+          <div class="stat-pill stat-pill-pool" title="Seçili havuzlardaki kelime sayısı">
+            <span class="stat-label">📚 Havuz</span>
+            <span class="stat-value" id="statPoolCount">644</span>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <!-- Çoklu Seçimli Konu/Havuz Açılır Kutusu -->
+          <div class="topic-dropdown-wrapper" data-topic-dropdown>
+            <button type="button" class="size-selector pool-quick-selector topic-dropdown-trigger" data-topic-trigger title="Oyun türetilecek konu havuzlarını seçin (Çoklu seçim yapılabilir)">
+              <span>🎯 Konu:</span>
+              <span class="topic-trigger-label" id="topicTriggerLabel" data-topic-label>🌟 Tüm Kelimeler</span>
+              <span class="topic-caret">▾</span>
+            </button>
+            <div class="topic-dropdown-menu hidden" data-topic-menu>
+              <div class="topic-dropdown-header">
+                <span>📚 Kullanılacak Havuzlar (Çoklu)</span>
+                <div class="topic-quick-links">
+                  <button type="button" class="btn-tiny-link" data-topic-select-all>Tümünü Seç</button>
+                </div>
+              </div>
+              <div class="topic-checkbox-list" data-topic-list></div>
+              <div class="topic-dropdown-footer">
+                <span data-topic-summary>1 havuz seçili</span>
+                <button type="button" class="btn btn-primary btn-xs" data-topic-apply>✅ Tamam</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="size-selector" title="Bulmaca ızgara boyutu ve zorluk derecesi">
+            <label for="gridSizeSelect">📐 Izgara:</label>
+            <select id="gridSizeSelect">
+              <option value="12">12×12 (Kolay)</option>
+              <option value="16" selected>16×16 (Orta)</option>
+              <option value="20">20×20 (Zor)</option>
+            </select>
+          </div>
+
+          <button type="button" id="btnCrosswordScores" class="btn btn-accent btn-sm" title="Puan Tablosunu Görüntüle">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span>Puan Tablosu</span>
+          </button>
+          <button id="btnNewPuzzle" class="btn btn-primary" title="Seçili konu havuzundan yeni bulmaca üret">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Yeni Bulmaca</span>
+          </button>
+          <button id="btnHint" class="btn btn-warning" title="Seçili kutuya doğru harfi yerleştir (Kısayol: . tuşu)">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>İpucu (.)</span>
+          </button>
+          <button type="button" class="btn btn-music active" data-action="toggle-music" title="Oyun odaklanma müziğini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span class="music-btn-label">Müzik</span>
+          </button>
+          <button id="btnToggleSound" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span id="soundBtnText" class="sound-btn-label">Ses</span>
+          </button>
+          <button type="button" class="btn btn-home-return" data-action="go-home" title="Ana Sayfaya Dön">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Ana Sayfa</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Ana İçerik: Sol Tarafta Kare Bulmaca Izgarası, Sağda (Masaüstü) / Altta (Mobil) Kelimeler Listesi -->
+      <main class="main-workspace">
+        <div class="puzzle-stage">
+          <div class="puzzle-header-card" id="activeClueBanner">
+            <div class="clue-main-row">
+              <span class="clue-badge" id="activeClueDir">👉 Kutucuk Seçin</span>
+              <div class="clue-text" id="activeClueText">
+                Başlamak için ızgaradaki bir soru kutusuna veya boş harf kutusuna dokunun.
+              </div>
+              <span class="clue-length" id="activeClueLen"></span>
+            </div>
+            <div class="cell-all-clues hidden" id="cellAllCluesBox"></div>
+          </div>
+
+          <div class="grid-scroll-container" id="crosswordGridScrollContainer">
+            <div id="crosswordGrid" class="crossword-grid" aria-label="Çengel Bulmaca Izgarası"></div>
+          </div>
+        </div>
+
+        <aside class="clues-sidebar">
+          <div class="sidebar-header">
+            <h2>🎯 Bulmacadaki Kelimeler</h2>
+            <button id="btnRevealAll" class="btn-link" title="Tüm cevapları göster">✨ Cevapları Göster</button>
+          </div>
+          <div class="clues-list" id="activeWordsList"></div>
+        </aside>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         3. HIZLI KELİME TESTİ (QUIZ CHALLENGE) EKRANI
+         ========================================================================= -->
+    <section id="quizView" class="game-screen subgame-screen hidden">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-top-row">
+            <div class="brand-icon quiz-brand-icon">
+              <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="36" height="36"><rect x="40" y="40" width="432" height="432" rx="64" fill="#8b5cf6"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#a78bfa"/><circle cx="256" cy="256" r="145" fill="#6d28d9"/><polygon points="280 110 170 270 245 270 215 402 342 232 268 232" fill="#fde047" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"/></svg>
+            </div>
+            <h1>Hızlı Kelime Testi</h1>
+          </div>
+          <div class="mode-selector" id="quizModeSelector" role="radiogroup" aria-label="Test Modu Seçimi">
+            <button type="button" class="mode-btn" data-mode="TR_TO_EN">🇹🇷 Türkçe ➔ 🇬🇧 İngilizce</button>
+            <button type="button" class="mode-btn" data-mode="EN_TO_TR">🇬🇧 İngilizce ➔ 🇹🇷 Türkçe</button>
+            <button type="button" class="mode-btn active" data-mode="MIXED">🔀 Karışık</button>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-pill stat-pill-score" title="Quiz Puanı">
+            <span class="stat-label">⭐ Puan</span>
+            <span class="stat-value" id="quizStatTotalScore">0</span>
+          </div>
+          <div class="stat-pill stat-pill-remaining" title="Kalan soru sayısı">
+            <span class="stat-label">⏳ Kalan Soru</span>
+            <span class="stat-value" id="quizStatRemaining">20</span>
+          </div>
+          <div class="stat-pill stat-pill-solved" title="Doğru cevap sayısı">
+            <span class="stat-label">🏆 Doğru</span>
+            <span class="stat-value" id="quizStatScore">0 / 20</span>
+          </div>
+          <div class="stat-pill stat-pill-pool" title="Arka arkaya doğru cevap serisi (Her 5'te kutlama!)">
+            <span class="stat-label">🔥 Seri</span>
+            <span class="stat-value" id="quizStatStreak">0</span>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <!-- Çoklu Seçimli Konu/Havuz Açılır Kutusu -->
+          <div class="topic-dropdown-wrapper" data-topic-dropdown>
+            <button type="button" class="size-selector pool-quick-selector topic-dropdown-trigger" data-topic-trigger title="Oyun türetilecek konu havuzlarını seçin (Çoklu seçim yapılabilir)">
+              <span>🎯 Konu:</span>
+              <span class="topic-trigger-label" data-topic-label>🌟 Tüm Kelimeler</span>
+              <span class="topic-caret">▾</span>
+            </button>
+            <div class="topic-dropdown-menu hidden" data-topic-menu>
+              <div class="topic-dropdown-header">
+                <span>📚 Kullanılacak Havuzlar (Çoklu)</span>
+                <div class="topic-quick-links">
+                  <button type="button" class="btn-tiny-link" data-topic-select-all>Tümünü Seç</button>
+                </div>
+              </div>
+              <div class="topic-checkbox-list" data-topic-list></div>
+              <div class="topic-dropdown-footer">
+                <span data-topic-summary>1 havuz seçili</span>
+                <button type="button" class="btn btn-primary btn-xs" data-topic-apply>✅ Tamam</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="btnOpenQuizCountModal" class="size-selector question-count-trigger" title="Soru sayısını belirle">
+            <span>📋</span>
+            <strong id="quizQuestionCountLabel" class="question-count-badge">20</strong>
+            <span class="topic-caret">✎</span>
+          </button>
+
+          <button type="button" id="btnQuizScores" class="btn btn-accent btn-sm" title="Puan Tablosunu Görüntüle">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span>Puan Tablosu</span>
+          </button>
+          <button type="button" id="btnQuizHint" class="btn btn-warning" title="Doğru şıkkı 2 saniyeliğine turuncu göster (Kısayol: . tuşu)">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>İpucu (.)</span>
+          </button>
+          <button type="button" id="btnNewQuizGame" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Yeni Test Başlat</span>
+          </button>
+          <button type="button" class="btn btn-music active" data-action="toggle-music" title="Oyun odaklanma müziğini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span class="music-btn-label">Müzik</span>
+          </button>
+          <button type="button" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="sound-btn-label">Ses</span>
+          </button>
+          <button type="button" class="btn btn-home-return" data-action="go-home">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Ana Sayfa</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="subgame-stage">
+        <div class="subgame-card quiz-card">
+          <div class="quiz-badge-row">
+            <span class="clue-badge" id="quizDirBadge">🇹🇷 TÜRKÇE ➔ 🇬🇧 İNGİLİZCE</span>
+            <span class="clue-length" id="quizProgressBadge">Soru 1 / 20</span>
+          </div>
+          <div class="quiz-prompt-box">
+            <p class="quiz-prompt-label">Aşağıdaki kelimenin doğru karşılığı hangisidir?</p>
+            <h2 class="quiz-prompt-word" id="quizPromptWord">ELMA</h2>
+          </div>
+          <div class="quiz-options-grid" id="quizOptionsGrid"></div>
+          <div class="quiz-feedback" id="quizFeedbackMsg">Bir seçeneğe dokunarak cevabınızı kontrol edin. (Her 5’li seride sürpriz kutlama!)</div>
+        </div>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         4. KELİME EŞLEŞTİRME (WORD MATCH) EKRANI
+         ========================================================================= -->
+    <section id="matchView" class="game-screen subgame-screen hidden">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-top-row">
+            <div class="brand-icon match-brand-icon">
+              <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="36" height="36"><rect x="40" y="40" width="432" height="432" rx="64" fill="#ec4899"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#f472b6"/><rect x="115" y="160" width="160" height="230" rx="20" transform="rotate(-14 195 275)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/><rect x="235" y="140" width="160" height="230" rx="20" transform="rotate(14 315 255)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/><circle cx="195" cy="275" r="32" fill="#ef4444"/><polygon points="315 224 327 248 353 252 334 270 338 296 315 284 292 296 296 270 277 252 303 248" fill="#eab308"/></svg>
+            </div>
+            <h1>Kelime Eşleştirme</h1>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-pill stat-pill-score" title="Eşleştirme Puanı">
+            <span class="stat-label">⭐ Puan</span>
+            <span class="stat-value" id="matchStatScore">0</span>
+          </div>
+          <div class="stat-pill stat-pill-solved">
+            <span class="stat-label">🏆 Eşleşen</span>
+            <span class="stat-value" id="matchStatPairs">0 / 6</span>
+          </div>
+          <div class="stat-pill stat-pill-pool">
+            <span class="stat-label">🎯 Hamle</span>
+            <span class="stat-value" id="matchStatMoves">0</span>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <!-- Çoklu Seçimli Konu/Havuz Açılır Kutusu -->
+          <div class="topic-dropdown-wrapper" data-topic-dropdown>
+            <button type="button" class="size-selector pool-quick-selector topic-dropdown-trigger" data-topic-trigger title="Oyun türetilecek konu havuzlarını seçin (Çoklu seçim yapılabilir)">
+              <span>🎯 Konu:</span>
+              <span class="topic-trigger-label" data-topic-label>🌟 Tüm Kelimeler</span>
+              <span class="topic-caret">▾</span>
+            </button>
+            <div class="topic-dropdown-menu hidden" data-topic-menu>
+              <div class="topic-dropdown-header">
+                <span>📚 Kullanılacak Havuzlar (Çoklu)</span>
+                <div class="topic-quick-links">
+                  <button type="button" class="btn-tiny-link" data-topic-select-all>Tümünü Seç</button>
+                </div>
+              </div>
+              <div class="topic-checkbox-list" data-topic-list></div>
+              <div class="topic-dropdown-footer">
+                <span data-topic-summary>1 havuz seçili</span>
+                <button type="button" class="btn btn-primary btn-xs" data-topic-apply>✅ Tamam</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="size-selector" title="Eşleştirme zorluk seviyesi ve kart sayısı">
+            <label for="matchDifficultySelect">📐 Zorluk:</label>
+            <select id="matchDifficultySelect">
+              <option value="4">Kolay (8 Kart)</option>
+              <option value="6" selected>Orta (12 Kart)</option>
+              <option value="8">Zor (16 Kart)</option>
+            </select>
+          </div>
+
+          <button type="button" id="btnMatchScores" class="btn btn-accent btn-sm" title="Puan Tablosunu Görüntüle">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span>Puan Tablosu</span>
+          </button>
+          <button type="button" id="btnNewMatchBoard" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Yeni Kartlar</span>
+          </button>
+          <button type="button" id="btnMatchHint" class="btn btn-warning" title="Birbiriyle eşleşen iki kartı turuncu renge çevir (Kısayol: . tuşu)">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>İpucu (.)</span>
+          </button>
+          <button type="button" class="btn btn-music active" data-action="toggle-music" title="Oyun odaklanma müziğini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span class="music-btn-label">Müzik</span>
+          </button>
+          <button type="button" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="sound-btn-label">Ses</span>
+          </button>
+          <button type="button" class="btn btn-home-return" data-action="go-home">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Ana Sayfa</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="subgame-stage">
+        <div class="subgame-card match-card">
+          <p class="match-instructions" id="matchStatusText">
+            💡 Bir <strong>🇹🇷 Türkçe</strong> ve bir <strong>🇬🇧 İngilizce</strong> kart seçerek eşleştirin! <strong>İpucu (<code>.</code>)</strong> eşleşen iki kartı <strong>turuncu</strong> yapar.
+          </p>
+          <div class="match-cards-grid" id="matchCardsGrid"></div>
+        </div>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         5. HARF AVI / KELİME KUR (WORD SCRAMBLE) EKRANI
+         ========================================================================= -->
+    <section id="scrambleView" class="game-screen subgame-screen hidden">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-top-row">
+            <div class="brand-icon scramble-brand-icon">
+              <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="36" height="36"><rect x="40" y="40" width="432" height="432" rx="64" fill="#0284c7"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#38bdf8"/><circle cx="256" cy="256" r="145" fill="none" stroke="#e0f2fe" stroke-width="16" stroke-dasharray="24 16"/><circle cx="256" cy="148" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="240" y="163" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">A</text><circle cx="348" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="333" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">B</text><circle cx="164" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="149" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">C</text><polygon points="256 220 276 276 256 264 236 276" fill="#facc15"/></svg>
+            </div>
+            <h1>Harf Avı (Kelime Kur)</h1>
+          </div>
+          <div class="mode-selector" id="scrambleModeSelector" role="radiogroup" aria-label="Harf Avı Modu Seçimi">
+            <button type="button" class="mode-btn" data-mode="TR_TO_EN">🇹🇷 Türkçe ➔ 🇬🇧 İngilizce</button>
+            <button type="button" class="mode-btn" data-mode="EN_TO_TR">🇬🇧 İngilizce ➔ 🇹🇷 Türkçe</button>
+            <button type="button" class="mode-btn active" data-mode="MIXED">🔀 Karışık</button>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-pill stat-pill-score" title="Harf Avı Puanı">
+            <span class="stat-label">⭐ Puan</span>
+            <span class="stat-value" id="scrambleStatScore">0</span>
+          </div>
+          <div class="stat-pill stat-pill-remaining" title="Kalan kelime sayısı">
+            <span class="stat-label">⏳ Kalan</span>
+            <span class="stat-value" id="scrambleStatRemaining">10</span>
+          </div>
+          <div class="stat-pill stat-pill-solved" title="Çözülen kelime sayısı">
+            <span class="stat-label">🏆 Çözülen</span>
+            <span class="stat-value" id="scrambleStatSolved">0 / 10</span>
+          </div>
+        </div>
+
+        <div class="actions-bar">
+          <!-- Çoklu Seçimli Konu/Havuz Açılır Kutusu -->
+          <div class="topic-dropdown-wrapper" data-topic-dropdown>
+            <button type="button" class="size-selector pool-quick-selector topic-dropdown-trigger" data-topic-trigger title="Oyun türetilecek konu havuzlarını seçin (Çoklu seçim yapılabilir)">
+              <span>🎯 Konu:</span>
+              <span class="topic-trigger-label" data-topic-label>🌟 Tüm Kelimeler</span>
+              <span class="topic-caret">▾</span>
+            </button>
+            <div class="topic-dropdown-menu hidden" data-topic-menu>
+              <div class="topic-dropdown-header">
+                <span>📚 Kullanılacak Havuzlar (Çoklu)</span>
+                <div class="topic-quick-links">
+                  <button type="button" class="btn-tiny-link" data-topic-select-all>Tümünü Seç</button>
+                </div>
+              </div>
+              <div class="topic-checkbox-list" data-topic-list></div>
+              <div class="topic-dropdown-footer">
+                <span data-topic-summary>1 havuz seçili</span>
+                <button type="button" class="btn btn-primary btn-xs" data-topic-apply>✅ Tamam</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" id="btnOpenScrambleCountModal" class="size-selector question-count-trigger" title="Kelime sayısını belirle">
+            <span>📋</span>
+            <strong id="scrambleQuestionCountLabel" class="question-count-badge">10</strong>
+            <span class="topic-caret">✎</span>
+          </button>
+
+          <button type="button" id="btnScrambleScores" class="btn btn-accent btn-sm" title="Puan Tablosunu Görüntüle">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span>Puan Tablosu</span>
+          </button>
+          <button type="button" id="btnNewScrambleGame" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Yeni Oyun</span>
+          </button>
+          <button type="button" id="btnScrambleHint" class="btn btn-warning" title="Sıradaki doğru harfi yerleştir (Kısayol: . tuşu)">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>İpucu (.)</span>
+          </button>
+          <button type="button" class="btn btn-music active" data-action="toggle-music" title="Oyun odaklanma müziğini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span class="music-btn-label">Müzik</span>
+          </button>
+          <button type="button" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="sound-btn-label">Ses</span>
+          </button>
+          <button type="button" class="btn btn-home-return" data-action="go-home">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Ana Sayfa</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="subgame-stage">
+        <div class="subgame-card scramble-card">
+          <div class="quiz-badge-row">
+            <span class="clue-badge" id="scrambleDirBadge">🇹🇷 TÜRKÇE ➔ 🇬🇧 İNGİLİZCE</span>
+            <span class="clue-length" id="scrambleLenBadge">5 Harf</span>
+          </div>
+          <div class="quiz-prompt-box">
+            <p class="quiz-prompt-label">Aşağıdaki kelimenin karşılığını harflere dokunarak veya klavyeden yazarak oluşturun:</p>
+            <h2 class="quiz-prompt-word" id="scramblePromptWord">KİTAP</h2>
+          </div>
+
+          <!-- Kullanıcının dizdiği harf kutuları -->
+          <div class="scramble-answer-slots" id="scrambleAnswerSlots"></div>
+
+          <!-- Karışık harf taşları -->
+          <div class="scramble-tiles-pool" id="scrambleTilesPool"></div>
+
+          <div class="scramble-controls-row">
+            <button type="button" id="btnScrambleClear" class="btn btn-secondary btn-sm">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>Harfleri Sıfırla</span>
+            </button>
+            <span class="scramble-feedback" id="scrambleFeedbackMsg">Harf taşlarına dokunun veya <strong>nokta (<code>.</code>)</strong> tuşuyla ipucu alın.</span>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         6. AI SOHBET & PRATİK ARKADAŞI (LOCAL IN-BROWSER WEBGPU CHATBOT) EKRANI
+         ========================================================================= -->
+    <section id="chatbotView" class="game-screen chatbot-screen hidden">
+      <!-- WhatsApp Tarzı Modern Obsidian & Gold Başlık Barı -->
+      <header class="topbar chat-header-topbar">
+        <div class="chat-header-left">
+          <!-- WhatsApp Tarzı Geri Dön Butonu -->
+          <button type="button" id="btnChatGoHome" class="btn-chat-back" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div class="chat-profile-badge">
+            <div class="chat-avatar-wrapper">
+              <svg viewBox="0 0 120 120" class="chat-avatar-svg" aria-hidden="true">
+                <circle cx="60" cy="60" r="58" fill="#0f172a" stroke="#f59e0b" stroke-width="4"/>
+                <path d="M30 52c0-24 13-38 30-38s30 14 30 38c0 14-2 28-6 38-5 12-10 18-12 24-4-6-6-14-12-24-4-10-6-24-6-38z" fill="#78350f"/>
+                <path d="M26 62c-3 12-2 26 2 36 2 5 7 14 10 14 3 0 1-8 0-14-2-10-4-24-2-36z" fill="#92400e"/>
+                <path d="M94 62c3 12 2 26-2 36-2 5-7 14-10 14-3 0-1-8 0-14 2-10 4-24 2-36z" fill="#92400e"/>
+                <rect x="52" y="70" width="16" height="18" fill="#fde68a"/>
+                <path d="M22 114c3-22 16-32 38-32s35 10 38 32z" fill="#0d9488"/>
+                <path d="M50 82l10 14 10-14c-6 4-14 4-20 0z" fill="#f59e0b"/>
+                <circle cx="60" cy="52" r="24" fill="#fde68a"/>
+                <path d="M36 46c2-16 11-26 24-26s24 10 24 26c-6-10-14-14-24-14s-18 4-24 14z" fill="#92400e"/>
+                <path d="M36 46c4 8 10 12 16 12 2-6 5-10 8-12-10 0-18-6-24 0z" fill="#78350f"/>
+                <path d="M84 46c-4 8-10 12-16 12-2-6-5-10-8-12 10 0 18-6 24 0z" fill="#78350f"/>
+                <path d="M46 43c2-2 6-2 8 0" stroke="#78350f" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <path d="M66 43c2-2 6-2 8 0" stroke="#78350f" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <circle cx="50" cy="49" r="3.2" fill="#0f172a"/>
+                <circle cx="70" cy="49" r="3.2" fill="#0f172a"/>
+                <path d="M45 47l3 2M55 47l-3 2M65 47l3 2M75 47l-3 2" stroke="#0f172a" stroke-width="1.2" stroke-linecap="round"/>
+                <ellipse cx="43" cy="54" rx="3.5" ry="2" fill="#fca5a5" opacity="0.65"/>
+                <ellipse cx="77" cy="54" rx="3.5" ry="2" fill="#fca5a5" opacity="0.65"/>
+                <path d="M60 51v4" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M52 59c3 4 13 4 16 0" fill="none" stroke="#be123c" stroke-width="2.6" stroke-linecap="round"/>
+                <circle cx="36" cy="56" r="2.8" fill="#fbbf24"/>
+                <circle cx="84" cy="56" r="2.8" fill="#fbbf24"/>
+              </svg>
+              <span class="chat-online-indicator" title="Çevrim İçi"></span>
+            </div>
+            <div class="chat-profile-meta">
+              <div class="chat-profile-name-row">
+                <h2 class="chat-profile-name">Emma</h2>
+                <span class="chat-profile-role-tag">AI Eğitmen</span>
+              </div>
+              <p class="chat-profile-status" id="chatProfileStatus">
+                <span class="status-dot"></span> Çevrim içi • <span id="chatLevelDisplay">A2 İngilizce</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-header-right">
+          <div class="chat-level-selector-wrap" title="Konuşma Seviyesini Değiştir">
+            <label for="chatLevelSelect" class="chat-level-label">Seviye:</label>
+            <select id="chatLevelSelect" class="chat-level-select">
+              <option value="A2" selected>A2 (Temel)</option>
+              <option value="B1">B1 (Orta)</option>
+              <option value="B2">B2 (İleri)</option>
+            </select>
+          </div>
+
+          <!-- Emma'nın Son Mesajını Dinle (Hoparlör) -->
+          <button type="button" id="btnChatSpeakLast" class="btn btn-action-icon btn-chat-header-action" title="Emma'nın Son Mesajını Dinle" aria-label="Sesli Dinle">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+          </button>
+
+          <!-- Sohbeti Temizle (Silgi İkonu) -->
+          <button type="button" id="btnChatClear" class="btn btn-action-icon btn-chat-header-action btn-chat-clear-clean" title="Sohbeti Temizle" aria-label="Sohbeti Temizle">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/>
+              <path d="M22 21H7"/>
+              <path d="m5 11 9 9"/>
+            </svg>
+          </button>
+
+          <button type="button" class="btn btn-sound active" data-action="toggle-sound" title="Ses efektlerini aç/kapat">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <span class="sound-btn-label">Ses</span>
+          </button>
+        </div>
+
+        <!-- 3 Çizgi / 3 Nokta Menü İkonu (API Key & AI Ayarları) - Mobilde Ses butonunun tam üstünde, Masaüstünde sağda -->
+        <button type="button" id="btnChatSettingsMenu" class="btn btn-action-icon btn-chat-header-action btn-chat-menu-trigger" title="Gemini API Ayarları" aria-label="Menü">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <span class="chat-menu-badge-dot hidden" id="chatMenuKeyAlert" title="API Anahtarı Tanımlanmadı">!</span>
+        </button>
+      </header>
+
+      <!-- Sağ Üstten Aşağı Açılan AI & API Ayarları Çekmecesi (Half-Sheet Drawer) -->
+      <div id="chatSettingsDrawer" class="chat-settings-drawer hidden">
+        <div class="csd-backdrop" id="chatSettingsBackdrop"></div>
+        <div class="csd-panel">
+          <div class="csd-header">
+            <div class="csd-title-group">
+              <span class="csd-title-icon">🔑</span>
+              <div>
+                <h3 class="csd-title">Google Gemini API Ayarları</h3>
+                <p class="csd-subtitle">Kendi API Anahtarınız ile Ücretsiz Kullanın</p>
+              </div>
+            </div>
+            <button type="button" id="btnCloseChatSettings" class="btn-csd-close" title="Kapat" aria-label="Kapat">✕</button>
+          </div>
+
+          <div class="csd-body">
+            <!-- Rehber Kartı -->
+            <div class="csd-guide-card">
+              <div class="cgc-header">
+                <span class="cgc-icon">💡</span>
+                <strong>Ücretsiz API Key Nasıl Alınır?</strong>
+              </div>
+              <p class="cgc-desc">Google AI Studio, bireysel kullanım için <strong>tamamen ücretsiz</strong> Gemini API anahtarı sağlar:</p>
+              <ol class="cgc-steps">
+                <li>Aşağıdaki bağlantıya tıklayarak Google AI Studio API sayfasını açın.</li>
+                <li>Google hesabınızla giriş yapıp <strong>"Create API key"</strong> butonuna basın.</li>
+                <li>Oluşturulan API anahtarını kopyalayıp aşağıdaki kutucuğa yapıştırın.</li>
+              </ol>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn-open-google-ai-studio" id="btnOpenAiStudioLink">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span>Google AI Studio'dan Anahtar Al ↗</span>
+              </a>
+            </div>
+
+            <!-- Kayıtlı Anahtar Görünümü (Aktif & Doğrulanmış) -->
+            <div id="csdSavedKeyView" class="csd-saved-key-box hidden">
+              <div class="csk-status-row">
+                <span class="csk-badge-active"><span class="csk-dot"></span> API Anahtarı Aktif & Doğrulandı</span>
+                <div class="csk-actions">
+                  <button type="button" id="btnEditApiKey" class="btn-csk-icon btn-csk-edit" title="Anahtarı Değiştir">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 20h9"/>
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    <span>Değiştir</span>
+                  </button>
+                  <button type="button" id="btnDeleteApiKey" class="btn-csk-icon btn-csk-delete" title="Anahtarı Kaldır">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="csk-key-display" id="cskMaskedKeyDisplay">••••••••••••••••••••</div>
+            </div>
+
+            <!-- Anahtar Giriş ve Test Alanı -->
+            <div id="csdInputKeyView" class="csd-input-key-box">
+              <label for="inputGeminiApiKey" class="csd-label">Google Gemini API Anahtarınız:</label>
+              <div class="csd-input-wrap">
+                <input type="password" id="inputGeminiApiKey" class="csd-input" placeholder="API anahtarınızı buraya yapıştırın..." autocomplete="off" spellcheck="false">
+                <button type="button" id="btnToggleApiKeyVisibility" class="btn-toggle-eye" title="Göster / Gizle">👁️</button>
+              </div>
+              <button type="button" id="btnTestAndSaveApiKey" class="btn-csd-save">
+                <span class="btn-save-text">🔍 Test Et ve Kaydet</span>
+                <span class="btn-save-spinner hidden">⏳ Doğrulanıyor...</span>
+              </button>
+            </div>
+
+            <!-- Sonuç / Hata Bildirimi -->
+            <div id="csdApiKeyStatus" class="csd-status-notice hidden"></div>
+
+            <div class="csd-privacy-note">
+              🔒 <em>Gizlilik & Güvenlik:</em> API anahtarınız sunucularımıza iletilmez. Yalnızca cihazınızın yerel belleğinde (localStorage) saklanır.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WhatsApp Tarzı Mesajlaşma Gövdesi -->
+      <main class="chat-workspace">
+        <div class="chat-messages-scroll-area" id="chatMessagesArea">
+          <div class="chat-day-divider">
+            <span>📅 Bugün • İngilizce Pratik Seansı</span>
+          </div>
+
+          <!-- API Anahtarı Tanımlanmadığında Görünen Karşılama Kartı -->
+          <div class="chat-api-key-banner hidden" id="chatApiKeyBanner">
+            <div class="cakb-icon-wrap">🔑</div>
+            <div class="cakb-content">
+              <h4>Gemini API Anahtarı Gerekli</h4>
+              <p>Emma ile canlı yapay zeka destekli İngilizce pratik yapabilmek için Google Gemini API anahtarınızı tanımlayın.</p>
+              <button type="button" class="btn-cakb-action" id="btnBannerOpenApiSettings">
+                <span>⚙️ API Anahtarını Tanımla (Ücretsiz)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-notice-card">
+            <div class="cnc-icon">💡</div>
+            <div class="cnc-text">
+              Emma ile dilediğiniz gibi İngilizce sohbet edin. Emma yanıtlarında <strong>kelime havuzunuzdaki</strong> kelimeleri kullanır. Anlaşılmayan cümlelerde sizi uyarır ve konuşmayı sürdürür.
+            </div>
+          </div>
+
+          <!-- Mesaj Baloncukları Alanı -->
+          <div class="chat-thread" id="chatThread"></div>
+
+          <!-- Yazıyor... Göstergesi -->
+          <div class="chat-msg chat-msg-bot chat-typing-bubble hidden" id="chatTypingIndicator">
+            <div class="chat-msg-avatar-mini" title="Emma">
+              <svg viewBox="0 0 120 120" width="28" height="28" aria-hidden="true">
+                <circle cx="60" cy="60" r="58" fill="#0f172a" stroke="#f59e0b" stroke-width="4"/>
+                <path d="M30 52c0-24 13-38 30-38s30 14 30 38c0 14-2 28-6 38-5 12-10 18-12 24-4-6-6-14-12-24-4-10-6-24-6-38z" fill="#78350f"/>
+                <rect x="52" y="70" width="16" height="18" fill="#fde68a"/>
+                <path d="M22 114c3-22 16-32 38-32s35 10 38 32z" fill="#0d9488"/>
+                <circle cx="60" cy="52" r="24" fill="#fde68a"/>
+                <path d="M36 46c2-16 11-26 24-26s24 10 24 26c-6-10-14-14-24-14s-18 4-24 14z" fill="#92400e"/>
+                <circle cx="50" cy="49" r="3.2" fill="#0f172a"/>
+                <circle cx="70" cy="49" r="3.2" fill="#0f172a"/>
+                <ellipse cx="43" cy="54" rx="3.5" ry="2" fill="#fca5a5" opacity="0.65"/>
+                <ellipse cx="77" cy="54" rx="3.5" ry="2" fill="#fca5a5" opacity="0.65"/>
+                <path d="M52 59c3 4 13 4 16 0" fill="none" stroke="#be123c" stroke-width="2.6" stroke-linecap="round"/>
+                <circle cx="36" cy="56" r="2.8" fill="#fbbf24"/>
+                <circle cx="84" cy="56" r="2.8" fill="#fbbf24"/>
+              </svg>
+            </div>
+            <div class="chat-typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="chat-typing-label">Emma yazıyor...</span>
+          </div>
+        </div>
+
+        <!-- Alt Bar: WhatsApp Tarzı Tek Satır Giriş Çubuğu -->
+        <footer class="chat-bottom-dock">
+          <form id="chatMessageForm" class="chat-input-form" onsubmit="return false;">
+            <div class="chat-input-pill">
+              <!-- 💡 İpucu Butonu (WhatsApp ataç/emoji butonu gibi giriş kutusunun içinde) -->
+              <button type="button" id="btnChatHintPrompt" class="btn-chat-hint-inline" title="İpucu / Örnek Yanıt Üret" aria-label="İpucu Cümle">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                  <path d="M9 18h6"/>
+                  <path d="M10 22h4"/>
+                </svg>
+              </button>
+              <textarea id="chatInputText" class="chat-input-field" placeholder="İngilizce bir mesaj yazın..." autocomplete="off" maxlength="800" rows="1"></textarea>
+            </div>
+            <!-- Yuvarlak WhatsApp Tarzı Gönder Butonu -->
+            <button type="submit" id="btnChatSend" class="btn-chat-send" title="Gönder" aria-label="Gönder">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </footer>
+      </main>
+    </section>
+
+    <!-- =========================================================================
+         ORTAK AYARLAR / VERİ HAVUZU STÜDYOSU MODALI (Ana Sayfadaki Ayarlar Butonu)
+         ========================================================================= -->
+    <div class="modal-backdrop hidden" id="poolModal">
+      <div class="modal-card pool-modal-card">
+        <div class="modal-header">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="rules-header-icon-wrap" style="width:38px; height:38px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div>
+              <h2 style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a;">Konu &amp; Ortak Kelime Havuzu Yönetimi</h2>
+              <p style="margin:2px 0 0 0; font-size:0.82rem; color:#64748b;">Tüm oyunların ortak veri tabanını yönetin: yeni havuz oluşturun, kelime ekleyin veya paylaşın</p>
+            </div>
+          </div>
+          <button id="btnClosePool" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area" id="poolModalScrollArea">
+          <!-- 1. Üst Kısım: Havuz Seçici ve Arama (Klavye açıldığında en üstte görünür kalır) -->
+          <div class="pool-top-controls">
+            <div class="pool-set-selector-group">
+              <label for="modalPoolSelect">Görüntülenen / Düzenlenen Havuz Seti:</label>
+              <select id="modalPoolSelect" class="pool-select-control"></select>
+            </div>
+
+            <!-- Arama ve Toplu Silme İşlemleri -->
+            <div class="pool-toolbar">
+              <input type="search" id="searchPoolInput" placeholder="🔍 Kelime Ara..." />
+              <div class="pool-actions">
+                <button type="button" id="btnDeleteSelected" class="btn btn-danger btn-sm btn-action-icon-badge" title="Seçilenleri Çıkar" aria-label="Seçilenleri Çıkar" disabled>
+                  <svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                  <span id="selectedCount" class="badge-count">0</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Orta Kısım: Akıcı Kaydırılabilir Kelime Tablosu (Aramanın hemen altında rahatça görünür ve kayar) -->
+          <div class="pool-table-wrapper">
+            <table class="pool-table">
+              <thead>
+                <tr>
+                  <th width="36"><input type="checkbox" id="selectAllCheckbox" title="Tümünü Seç" /></th>
+                  <th width="42">#</th>
+                  <th>🇹🇷 Türkçe</th>
+                  <th>🇬🇧 İngilizce</th>
+                  <th width="64">Harf</th>
+                  <th width="90">İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="poolTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- 3. Alt Kısım: Havuz İşlem Butonları (Kullanıcı İsteği: Yalnızca modern ikonlar, metinsiz) -->
+          <div class="pool-bottom-actions-bar">
+            <div class="pool-set-actions">
+              <!-- Material Symbols / Lucide: book-plus (Yeni Kelime Ekle) -->
+              <button type="button" id="btnOpenAddWordModal" class="btn btn-primary btn-action-icon" title="Yeni Kelime Ekle" aria-label="Yeni Kelime Ekle">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 2v20"/><line x1="11" y1="10" x2="17" y2="10"/><line x1="14" y1="7" x2="14" y2="13"/></svg>
+              </button>
+              <!-- Lucide: folder-plus (Yeni Havuz Oluştur) -->
+              <button type="button" id="btnNewPoolSet" class="btn btn-success btn-action-icon" title="Yeni Havuz Oluştur" aria-label="Yeni Havuz Oluştur">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+              </button>
+              <!-- Lucide: pencil (Havuz Adını Değiştir) -->
+              <button type="button" id="btnRenamePoolSet" class="btn btn-secondary btn-action-icon" title="Havuz Adını Değiştir" aria-label="Havuz Adını Değiştir">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+              </button>
+              <!-- Lucide: trash-2 (Havuzu Sil) -->
+              <button type="button" id="btnDeletePoolSet" class="btn btn-danger-outline btn-action-icon" title="Havuzu Sil" aria-label="Havuzu Sil">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+              <!-- Lucide: arrow-up-down (İçe / Dışa Aktar) -->
+              <button type="button" id="btnToggleImportExport" class="btn btn-accent btn-action-icon" title="İçe / Dışa Aktar" aria-label="İçe / Dışa Aktar">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m21 15-4 4-4-4"/><path d="M17 19V5"/><path d="m3 9 4-4 4 4"/><path d="M7 5v14"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <span id="poolStatusMsg">Değişiklikler otomatik kaydedilir ve tüm oyunlarda ortak olarak kullanılır.</span>
+          <button type="button" id="btnApplyAndRegenerate" class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Kaydet ve Kapat</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ALT SAYFA 1: YENİ KELİME EKLEME SAYFASI (Hangi Havuza Ekleneceği Seçilebilir)
+         ========================================================================= -->
+    <div class="modal-backdrop sub-modal-backdrop hidden" id="addWordModal">
+      <div class="modal-card add-word-modal-card" role="dialog" aria-modal="true" aria-labelledby="addWordModalTitle">
+        <div class="modal-header">
+          <div>
+            <h2 id="addWordModalTitle">Havuza Yeni Kelime Ekle</h2>
+            <p>Kelimenin ekleneceği veri havuzunu seçin ve Türkçe - İngilizce karşılıklarını girin:</p>
+          </div>
+          <button type="button" id="btnCloseAddWordModal" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+        <form id="addWordForm" class="add-word-modal-form">
+          <div class="input-group">
+            <label for="addWordPoolSelect">Eklenecek Veri Havuzu:</label>
+            <select id="addWordPoolSelect" class="pool-select-control"></select>
+          </div>
+          <div class="input-group">
+            <label for="inputTr">Türkçe Kelime (Örn: Uzay Gemisi)</label>
+            <input type="text" id="inputTr" placeholder="Türkçe karşılığı..." required maxlength="32" />
+          </div>
+          <div class="input-group">
+            <label for="inputEn">İngilizce Kelime (Örn: Spaceship)</label>
+            <input type="text" id="inputEn" placeholder="İngilizce karşılığı..." required maxlength="28" />
+          </div>
+          <div class="add-word-status" id="addWordModalStatus">
+            İki kelimeli ifadelerde boşluklar bulmacada otomatik olarak tire (-) işaretine dönüşür.
+          </div>
+          <div class="add-word-modal-actions">
+            <button type="button" id="btnCancelAddWordModal" class="btn btn-secondary">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+              <span>Geri Dön</span>
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span>Kelimeyi Ekle</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ALT SAYFA 2: YENİ HAVUZ OLUŞTURMA / AD DEĞİŞTİRME SAYFASI
+         ========================================================================= -->
+    <div class="modal-backdrop sub-modal-backdrop hidden" id="poolNameModal">
+      <div class="modal-card add-word-modal-card" role="dialog" aria-modal="true" aria-labelledby="poolNameModalTitle">
+        <div class="modal-header">
+          <div>
+            <h2 id="poolNameModalTitle">Yeni Veri Havuzu Oluştur</h2>
+            <p id="poolNameModalSubtitle">Oluşturacağınız yeni konu havuzuna bir isim verin:</p>
+          </div>
+          <button type="button" id="btnClosePoolNameModal" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+        <div class="add-word-modal-form">
+          <div class="input-group">
+            <label for="poolNameInput">Veri Havuzu Adı:</label>
+            <input type="text" id="poolNameInput" placeholder="Örn: 8. Sınıf 1. Ünite, Sınav Kelimelerim..." maxlength="45" />
+          </div>
+          <div class="add-word-status" id="poolNameModalStatus">
+            Oluşturduğunuz havuza tekli kelime ekleyebilir veya toplu liste aktarabilirsiniz.
+          </div>
+          <div class="add-word-modal-actions">
+            <button type="button" id="btnCancelPoolName" class="btn btn-secondary">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+              <span>Geri Dön</span>
+            </button>
+            <button type="button" id="btnSavePoolName" class="btn btn-success">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>Kaydet</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ALT SAYFA 3: İÇE / DIŞA AKTAR (IMPORT / EXPORT) SAYFASI
+         ========================================================================= -->
+    <div class="modal-backdrop sub-modal-backdrop hidden" id="importExportModal">
+      <div class="modal-card ie-modal-card" role="dialog" aria-modal="true" aria-labelledby="ieModalTitle">
+        <div class="modal-header">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="rules-header-icon-wrap" style="width:38px; height:38px;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 15-4 4-4-4"/><path d="M17 19V5"/><path d="m3 9 4-4 4 4"/><path d="M7 5v14"/></svg>
+            </div>
+            <div>
+              <h2 id="ieModalTitle" style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a;">İçe Aktar / Dışa Aktar</h2>
+              <p style="margin:2px 0 0 0; font-size:0.82rem; color:#64748b;">Veri havuzuna (.txt, .csv, .json) kelime yükleyin veya havuzunuzu dışa aktarın:</p>
+            </div>
+          </div>
+          <button type="button" id="btnCloseImportExportModal" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area ie-modal-scroll-body">
+          <div class="pool-set-selector-group" style="margin-bottom: 12px;">
+            <label for="iePoolSelect">İşlem Yapılacak Veri Havuzu:</label>
+            <select id="iePoolSelect" class="pool-select-control"></select>
+          </div>
+
+          <div class="ie-grid">
+            <!-- Sol: Toplu Kelime İçe Aktar (Import) -->
+            <div class="ie-box ie-import-box">
+              <div class="ie-box-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <h3>Kelime İçe Aktar (Import)</h3>
+                </div>
+                <label class="btn btn-secondary btn-xs file-upload-label">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>Dosya Seç (.txt, .csv, .json)</span>
+                  <input type="file" id="importFileInput" accept=".txt,.csv,.json" hidden />
+                </label>
+              </div>
+              <p class="ie-hint">
+                Her satıra <code>Türkçe - İngilizce</code> (veya <code>=</code>, <code>,</code>, <code>;</code> ile) yazın ya da arkadaşınızın gönderdiği metni aşağıya yapıştırın:
+              </p>
+              <textarea id="importTextarea" rows="5" placeholder="Örnek:&#10;Elma - Apple&#10;Kitap = Book&#10;Bilim İnsanı - Scientist"></textarea>
+              <div class="ie-import-actions">
+                <button type="button" id="btnImportToCurrent" class="btn btn-primary btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                  <span>Seçili Havuza Ekle</span>
+                </button>
+                <button type="button" id="btnImportAsNewPool" class="btn btn-success btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+                  <span>Yeni Havuz Olarak Kaydet</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sağ: Arkadaşla Paylaş / Dışa Aktar (Export) -->
+            <div class="ie-box ie-export-box">
+              <div class="ie-box-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <h3>Havuzu Dışa Aktar &amp; Paylaş (Export)</h3>
+                </div>
+              </div>
+              <p class="ie-hint">
+                Seçili olan <strong id="exportPoolNameLabel">Havuz</strong> setini .txt / .json dosyası olarak indirebilir veya tek tıkla kopyalayabilirsiniz:
+              </p>
+              <textarea id="exportTextarea" rows="5" readonly></textarea>
+              <div class="ie-export-actions">
+                <button type="button" id="btnCopyExportText" class="btn btn-primary btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <span>Metni Kopyala</span>
+                </button>
+                <button type="button" id="btnDownloadTxt" class="btn btn-secondary btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>.TXT İndir</span>
+                </button>
+                <button type="button" id="btnDownloadJson" class="btn btn-accent btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  <span>.JSON İndir</span>
+                </button>
+                <button type="button" id="btnExportAllPoolsTxt" class="btn btn-warning btn-sm">
+                  <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>Tümünü Dışa Aktar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="add-word-status" id="ieModalStatus" style="margin-top: 12px; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>Dosya seçerek (.txt, .csv, .json) veya metin yapıştırarak yüzlerce kelimeyi anında aktarabilir ve paylaşabilirsiniz.</span>
+          </div>
+
+          <div class="ie-danger-zone" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(239, 68, 68, 0.35); display: flex; justify-content: flex-end;">
+            <button type="button" id="btnDeleteAllPools" class="btn btn-danger btn-sm">
+              <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Tüm Havuzları Sil</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <span>Değişiklikler anında ortak veri tabanına kaydedilir.</span>
+          <button type="button" id="btnBackFromImportExport" class="btn btn-secondary btn-sm">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            <span>Ayarlara Geri Dön</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         GÖSTERİŞLİ OYUN SONU / TAMAMLAMA KUTLAMA MODALI
+         ========================================================================= -->
+    <div class="modal-backdrop celebration-backdrop hidden" id="grandVictoryModal">
+      <div class="modal-card grand-victory-card" role="dialog" aria-modal="true" aria-labelledby="grandVictoryTitle">
+        <div class="grand-victory-burst" id="grandVictoryBurstIcon">🏆</div>
+        <span class="grand-victory-badge" id="grandVictoryBadge">OYUN TAMAMLANDI!</span>
+        <h2 id="grandVictoryTitle">Tebrikler! Oyunu Tamamladınız! 🎉</h2>
+        <p id="grandVictorySubtitle">Oyun tamamlandı! Aşağıdan performans istatistiklerinizi inceleyebilirsiniz.</p>
+
+        <div class="grand-victory-stats" id="grandVictoryStats">
+          <div class="gv-stat-box">
+            <span class="gv-stat-label" id="gvStat1Label">DOĞRU / TOPLAM</span>
+            <strong class="gv-stat-val" id="gvStat1Val">0 / 0</strong>
+          </div>
+          <div class="gv-stat-box">
+            <span class="gv-stat-label" id="gvStat2Label">BAŞARI ORANI</span>
+            <strong class="gv-stat-val" id="gvStat2Val">%0</strong>
+          </div>
+        </div>
+
+        <div class="grand-victory-actions">
+          <button type="button" id="btnVictoryHome" class="btn btn-secondary">
+            🏠 Ana Sayfaya Dön
+          </button>
+          <button type="button" id="btnVictoryReplay" class="btn btn-primary">
+            🚀 Tekrar Oyna
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         ELLE SORU SAYISI BELİRLEME POP-UP SAYFASI (Hızlı Kelime Testi & Harf Avı)
+         ========================================================================= -->
+    <div class="modal-backdrop sub-modal-backdrop hidden" id="questionCountModal">
+      <div class="modal-card sub-modal-card question-count-modal-card" role="dialog" aria-modal="true" aria-labelledby="questionCountModalTitle">
+        <div class="modal-header qc-modal-header">
+          <div class="qc-header-title-group">
+            <span class="qc-header-badge" id="questionCountGameBadge">⚡ HIZLI KELİME TESTİ</span>
+            <h2 id="questionCountModalTitle">Soru Sayısı Belirle</h2>
+            <p id="questionCountModalSub">🎯 Seçili Havuz: 🌟 Tüm Kelimeler</p>
+          </div>
+          <button type="button" id="btnCloseQuestionCountModal" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <form id="questionCountForm" class="add-word-modal-form qc-modal-body" novalidate>
+          <div class="qc-range-grid">
+            <div class="qc-range-box qc-range-min">
+              <div class="qc-range-icon">🔻</div>
+              <div class="qc-range-text">
+                <span class="qc-range-label">EN DÜŞÜK SINIR</span>
+                <strong class="qc-range-val"><span id="qcMinVal">10</span> <small>Soru</small></strong>
+              </div>
+            </div>
+            <div class="qc-range-box qc-range-max">
+              <div class="qc-range-icon">📚</div>
+              <div class="qc-range-text">
+                <span class="qc-range-label">EN YÜKSEK (HAVUZ)</span>
+                <strong class="qc-range-val"><span id="qcMaxVal">644</span> <small>Soru</small></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="qc-input-card">
+            <label for="questionCountInput" id="questionCountInputLabel" class="qc-input-title">
+              Kaç soruluk oyun başlatmak istiyorsunuz?
+            </label>
+            <div class="qc-input-control-row">
+              <button type="button" class="qc-step-btn" id="btnQcMinus" title="1 Azalt" aria-label="Azalt">−</button>
+              <input
+                type="text"
+                id="questionCountInput"
+                class="qc-number-input"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="4"
+                placeholder="20"
+                required
+              />
+              <button type="button" class="qc-step-btn" id="btnQcPlus" title="1 Artır" aria-label="Artır">+</button>
+            </div>
+          </div>
+
+          <div class="add-word-status qc-validation-msg" id="questionCountStatusMsg">
+            💡 Lütfen <strong>10</strong> ile <strong id="qcHintMax">644</strong> arasında bir rakam girin.
+          </div>
+
+          <div class="add-word-modal-actions qc-modal-actions">
+            <button type="button" id="btnCancelQuestionCountModal" class="btn btn-secondary">⬅️ Vazgeç</button>
+            <button type="submit" id="btnApplyQuestionCount" class="btn btn-primary">🚀 Oyunu Başlat</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         UYARI MODALI (Yetersiz Kelime Sayısı vb. Durumlar İçin)
+         ========================================================================= -->
+    <!-- =========================================================================
+         YENİ ANA SAYFA MODALLARI: 3 ÇİZGİ MENÜSÜ VE BAĞLANTILI SAYFALAR
+         ========================================================================= -->
+
+    <!-- 1. Ana Hamburger Menü Çekmecesi -->
+    <div class="modal-backdrop hidden" id="mainNavDrawerModal">
+      <div class="modal-card modern-drawer-card" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+        <div class="drawer-header">
+          <div class="drawer-brand">
+            <span class="drawer-logo-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <h2 id="drawerTitle">English is easy</h2>
+          </div>
+          <button type="button" id="btnCloseNavDrawer" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="drawer-body">
+          <p class="drawer-lead">Platform seçenekleri, kurallar ve gelişim göstergeleri:</p>
+          
+          <div class="drawer-links-grid">
+            <!-- Menü 1: Nasıl Oynanır? -->
+            <button type="button" id="btnDrawerOpenHowToPlay" class="drawer-action-card">
+              <div class="dac-icon-wrap bg-emerald">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <div class="dac-text">
+                <strong>Nasıl Oynanır?</strong>
+                <span>Oyunların veri havuzlarından beslenmesi ve öğrenme mantığı</span>
+              </div>
+              <span class="dac-arrow">➔</span>
+            </button>
+
+            <!-- Menü 2: Veri Havuzu Yönetimi -->
+            <button type="button" id="btnDrawerOpenPoolGuide" class="drawer-action-card">
+              <div class="dac-icon-wrap bg-amber">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              </div>
+              <div class="dac-text">
+                <strong>Veri Havuzu Yönetimi</strong>
+                <span>Yeni havuz oluşturma, kelime ekleme/çıkarma, silme ve içe/dışa aktarma rehberi</span>
+              </div>
+              <span class="dac-arrow">➔</span>
+            </button>
+
+            <!-- Menü 3: Kurallar -->
+            <button type="button" id="btnDrawerOpenRules" class="drawer-action-card">
+              <div class="dac-icon-wrap bg-blue">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              </div>
+              <div class="dac-text">
+                <strong>Kurallar</strong>
+                <span>5 oyunun resmi kuralları, mekanikleri ve ipucu yönergeleri</span>
+              </div>
+              <span class="dac-arrow">➔</span>
+            </button>
+
+            <!-- Menü 4: Oyun İstatistikleri -->
+            <button type="button" id="btnDrawerOpenStats" class="drawer-action-card">
+              <div class="dac-icon-wrap bg-purple">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+              </div>
+              <div class="dac-text">
+                <strong>Oyun İstatistikleri</strong>
+                <span>Oyun bazında başarı oranları, rekorlar ve gelişim analizleri</span>
+              </div>
+              <span class="dac-arrow">➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Veri Havuzu Yönetimi Rehberi Sayfası -->
+    <div class="modal-backdrop hidden" id="poolGuideModal">
+      <div class="modal-card modern-guide-card" role="dialog" aria-modal="true" aria-labelledby="poolGuideTitle">
+        <div class="modal-header guide-header">
+          <div class="guide-brand-wrap">
+            <div class="guide-header-icon-wrap">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div>
+              <h2 id="poolGuideTitle">Veri Havuzu Yönetimi Rehberi</h2>
+              <p>Kelime havuzlarını oluşturma, düzenleme, içe ve dışa aktarma adımları</p>
+            </div>
+          </div>
+          <button type="button" id="btnClosePoolGuide" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area guide-modal-body">
+          <!-- 1. Yeni Havuz Oluşturma -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-amber">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Yeni Veri Havuzu Oluşturma</h3>
+                <span>Öğrendiğiniz konulara göre özel kelime listeleri tanımlayın</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Ana ekranın sağ üst köşesindeki <strong>⚙️ Ayarlar (Çark)</strong> butonuna dokunarak Veri Havuzu Yönetim ekranını açın. <strong>"Yeni Havuz Ekle"</strong> butonuna tıklayın, havuzunuza açıklayıcı bir ad (örneğin <em>Meslekler, YDS Kelimeleri, B1 Sıfatlar</em>) vererek kaydedin.
+            </p>
+          </article>
+
+          <!-- 2. Kelime Ekleme -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-emerald">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Kelime Ekleme</h3>
+                <span>Havuza Türkçe ve İngilizce karşılıklarıyla tek tek kelime ekleyin</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Kelime eklemek istediğiniz havuzu açılır listeden aktif hale getirin. Üst kısımdaki <strong>"+" (Yeni Kelime Ekle)</strong> butonuna dokunun. Açılan mini formda kelimenin Türkçe ve İngilizce karşılıklarını yazıp onaylayarak havuza anında dahil edin.
+            </p>
+          </article>
+
+          <!-- 3. Kelime Çıkarma (Silme) -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-rose">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#f43f5e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Kelime Çıkarma (Tekil &amp; Toplu Silme)</h3>
+                <span>Öğrendiğiniz veya hatalı kelimeleri havuzdan güvenle çıkarın</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Kelime tablosunda her kelimenin sağında bulunan <strong>çöp kutusu</strong> simgesine tıklayarak ilgili kelimeyi silebilirsiniz. Birden fazla kelimeyi aynı anda silmek için sol kutucukları işaretleyip <strong>"Seçilenleri Çıkar"</strong> butonunu kullanabilirsiniz.
+            </p>
+          </article>
+
+          <!-- 4. Havuz Silme -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-orange">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fb923c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Havuz Silme</h3>
+                <span>Artık ihtiyaç duymadığınız özel havuzları kaldırın</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Silmek istediğiniz havuz seçiliyken havuz çubuğundaki <strong>"Havuzu Sil"</strong> butonuna basın ve onaylayın. O havuz tüm kelimeleriyle sistemden kaldırılır. (Sistemin ana havuzu olan <em>Tüm Kelimeler</em> veri güvenliği için silinemez).
+            </p>
+          </article>
+
+          <!-- 5. Toplu İçe Aktarma (Import) -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-blue">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Toplu İçe Aktarma (Import)</h3>
+                <span>Excel, metin (.txt) veya yedek (.json) dosyalarınızdaki kelimeleri tek tıkla yükleyin</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Havuz ekranındaki <strong>"İçe Aktar / Dışa Aktar"</strong> sayfasına geçin. İster <code>.txt</code> metin dosyanızı veya <code>.json</code> yedek dosyanızı doğrudan yükleyin, ister not defteri/Excel'den kopyaladığınız satırları (<code>İngilizce - Türkçe</code> veya <code>English, Turkish</code>) yapıştırın. <strong>"Seçili Havuza Ekle"</strong> veya <strong>"Yeni Havuz Olarak Kaydet"</strong> seçeneğiyle saniyeler içinde içe aktarın.
+            </p>
+          </article>
+
+          <!-- 6. Dışa Aktarma & Paylaşma (Export) -->
+          <article class="guide-step-card">
+            <div class="gsc-top">
+              <div class="gsc-icon-wrap bg-purple">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </div>
+              <div class="gsc-title">
+                <h3>Dışa Aktarma &amp; Paylaşma (Export)</h3>
+                <span>Havuzlarınızı .TXT veya .JSON formatında yedekleyin ve paylaşın</span>
+              </div>
+            </div>
+            <p class="gsc-desc">
+              Oluşturduğunuz kelime havuzunu yedeklemek veya telefonunuz/arkadaşlarınızla paylaşmak için <strong>.TXT İndir</strong> ile sade metin dosyası, <strong>.JSON İndir</strong> ile tam veri yedeği alabilir ya da <strong>Metni Kopyala</strong> butonuyla panonuza alıp dilediğiniz yerde anında paylaşabilirsiniz. Hem .TXT hem de .JSON formatı tam uyumlulukla desteklenmektedir.
+            </p>
+          </article>
+        </div>
+
+        <div class="modal-footer guide-footer">
+          <button type="button" id="btnPoolGuideOpenActualPool" class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Veri Havuzu Yönetimini Aç</span>
+          </button>
+          <button type="button" id="btnClosePoolGuideBtn" class="btn btn-secondary btn-sm">
+            <span>Kapat</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Oyunların Kurallarını Gösteren Sayfa -->
+    <div class="modal-backdrop hidden" id="gameRulesModal">
+      <div class="modal-card modern-rules-card" role="dialog" aria-modal="true" aria-labelledby="rulesModalTitle">
+        <div class="modal-header rules-header">
+          <div class="rules-header-title">
+            <div class="rules-header-icon-wrap">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            </div>
+            <div>
+              <h2 id="rulesModalTitle">Kurallar &amp; Oyun Rehberi</h2>
+              <p>5 farklı oyunun resmi oynanış kuralları, mekanikleri ve ipucu yönergeleri</p>
+            </div>
+          </div>
+          <button type="button" id="btnCloseGameRules" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area rules-modal-body">
+          <!-- 1. Kelimelik -->
+          <article class="rule-section-card rule-card-kelimelik">
+            <div class="rsc-header">
+              <span class="rsc-badge badge-amber">Kelimelik</span>
+              <h3>Zamana Karşı Kelime Avı Kuralları</h3>
+            </div>
+            <ul class="rsc-list">
+              <li><strong>Merkez Yıldız (2K) Kuralı:</strong> Tahtaya yerleştirilen ilk kelime, mutlaka tahtanın merkezindeki yıldızlı (★ 2K) kareden geçmelidir. Boş bırakılırsa kelime onaylanamaz.</li>
+              <li><strong>Kilitli Taşlara Bağlantı:</strong> İlk hamleden sonraki tüm hamlelerde konulan yeni taşlar, tahtadaki mevcut harflerden en az birine yatay ya da dikey olarak temas etmelidir.</li>
+              <li><strong>Çift Yönlü Anlamlılık:</strong> Tahtada birbirine temas eden TÜM kelimeler (soldan sağa ve yukarıdan aşağıya) sözlükte anlamlı olmak zorundadır. Yan oluşan kelimelerden biri bile anlamsızsa hamle onaylanamaz.</li>
+              <li><strong>Özel Çarpan Kareleri:</strong> 2H (Harf ×2), 3H (Harf ×3), 2K (Kelime ×2), 3K (Kelime ×3) ve merkez ★ 2K kareleri kelime puanınızı katlar.</li>
+              <li><strong>Akıllı İpucu &amp; Taş Yenileme:</strong> İpucu butonu tahtadaki harfler ile elinizdeki 10 taşı tarayarak öneri verir. Elinizdeki taşlarla yeni kelime oluşturulamıyorsa taşlar otomatik yenilenir.</li>
+            </ul>
+          </article>
+
+          <!-- 2. Çengel Bulmaca -->
+          <article class="rule-section-card rule-card-crossword">
+            <div class="rsc-header">
+              <span class="rsc-badge badge-emerald">Çengel Bulmaca</span>
+              <h3>Klasik Gazete Formatında Çengel Bulmaca</h3>
+            </div>
+            <ul class="rsc-list">
+              <li><strong>Oyunun Amacı:</strong> Izgaradaki soru kutucuklarına tıklayarak Türkçe veya İngilizce soru karşılığını ızgaraya yazın.</li>
+              <li><strong>Yön Değiştirme:</strong> Seçili kutuya tekrar dokunarak veya Boşluk/Tab tuşuna basarak Yatay ⇄ Dikey yönler arasında kolayca geçiş yapabilirsiniz.</li>
+              <li><strong>İpucu Sistemi:</strong> Nokta (<code>.</code>) tuşuna basarak veya İpucu butonuna dokunarak harf açabilirsiniz (-25 puan kırılır).</li>
+              <li><strong>Izgara Ölçekleme:</strong> 12×12, 16×16 veya 20×20 boyutlarını seçerek ekranınıza tam oturan bulmacalar çözebilirsiniz.</li>
+            </ul>
+          </article>
+
+          <!-- 3. Hızlı Kelime Testi -->
+          <article class="rule-section-card rule-card-quiz">
+            <div class="rsc-header">
+              <span class="rsc-badge badge-blue">Hızlı Kelime Testi</span>
+              <h3>4 Seçenekli Çoktan Seçmeli Test</h3>
+            </div>
+            <ul class="rsc-list">
+              <li><strong>Oyunun Amacı:</strong> Belirlediğiniz soru sayısı üzerinden en yüksek doğru oranı ve seriyi yakalamak.</li>
+              <li><strong>Seri Kutlamaları:</strong> Arka arkaya her 5 doğru cevapta motivasyon tebrikleri ve çarpan puanlar tetiklenir.</li>
+              <li><strong>İpucu Desteği:</strong> İpucu butonuna tıkladığınızda doğru şık 2 saniye boyunca turuncu yanıp söner.</li>
+            </ul>
+          </article>
+
+          <!-- 4. Kelime Eşleştirme -->
+          <article class="rule-section-card rule-card-match">
+            <div class="rsc-header">
+              <span class="rsc-badge badge-purple">Kelime Eşleştirme</span>
+              <h3>Kart Hafızası ve Anlamsal Eşleştirme</h3>
+            </div>
+            <ul class="rsc-list">
+              <li><strong>Oyunun Amacı:</strong> Türkçe ve İngilizce kart çiftlerini en az hamleyle bulup eşleştirmek.</li>
+              <li><strong>Zorluk Dereceleri:</strong> Kolay (8 kart), Orta (12 kart) veya Zor (16 kart).</li>
+              <li><strong>İpucu:</strong> İpucu butonuna basıldığında birbiriyle eşleşen iki kart 2 saniyeliğine turuncu yanıp söner.</li>
+            </ul>
+          </article>
+
+          <!-- 5. Harf Avı -->
+          <article class="rule-section-card rule-card-scramble">
+            <div class="rsc-header">
+              <span class="rsc-badge badge-sky">Harf Avı (Kelime Kur)</span>
+              <h3>Karışık Harflerden Doğru Kelimeyi Türetme</h3>
+            </div>
+            <ul class="rsc-list">
+              <li><strong>Oyunun Amacı:</strong> Karışık verilen harf taşlarına sırasıyla dokunarak veya klavyeden yazarak hedef kelimeyi tamamlamak.</li>
+              <li><strong>Harf İpucu:</strong> Takıldığınızda nokta (<code>.</code>) tuşuna basarak sıradaki doğru harfi anında yerleştirebilirsiniz.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="modal-footer rules-footer">
+          <button type="button" id="btnCloseGameRulesBtn" class="btn btn-primary btn-sm">
+            <span>Tamam</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Nasıl Oynanır? (Platform Mantığı & Veri Havuzlarından Beslenme) -->
+    <div class="modal-backdrop hidden" id="howToPlayModal">
+      <div class="modal-card modern-how-card" role="dialog" aria-modal="true" aria-labelledby="howToPlayTitle">
+        <div class="modal-header how-header">
+          <div class="how-brand-wrap">
+            <div class="how-header-icon-wrap">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div>
+              <h2 id="howToPlayTitle">Nasıl Oynanır?</h2>
+              <p>Dinamik kelime havuzları ve oyun temelli ezberleme sistemi</p>
+            </div>
+          </div>
+          <button type="button" id="btnCloseHowToPlay" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area how-modal-body">
+          <!-- Kullanıcının Belirlediği Özel Resmi Metin -->
+          <div class="how-manifesto-card">
+            <div class="manifesto-icon-wrap">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div class="manifesto-text">
+              <p class="manifesto-quote">
+                Bu platform, İngilizce kursunuzda öğrendiğiniz veya öğreneceğiniz kelimelerle dinamik olarak büyür ve gelişir. Platformdaki tüm oyunlar doğrudan <strong>merkezi veri havuzlarından beslenmektedir</strong>. Yeni kelimeler öğrendikçe veya yeni öğrenilecek kelime grupları oluştukça; <strong>Veri Havuzu Yönetimi</strong> sayfasından kategoriler oluşturup kelimelerinizi veri tabanına ekleyin ve bu kelimeler ile çeşitli oyunlar oynayarak eğlenceli ve kalıcı bir şekilde kelime ezberleyin.
+              </p>
+            </div>
+          </div>
+
+          <!-- 4 Temel Adım (Vektör SVG İkonlu) -->
+          <h3 class="how-steps-title">Kalıcı Kelime Ezberleme Döngüsü</h3>
+          <div class="how-steps-grid">
+            <div class="step-card">
+              <div class="step-top-row">
+                <div class="step-svg-wrap">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="step-num">1</div>
+              </div>
+              <strong>Veri Havuzunu Hazırla</strong>
+              <p>Kursunuzda öğrendiğiniz kelime listelerini veya hazır konuları veri havuzuna tanımlayın.</p>
+            </div>
+
+            <div class="step-card">
+              <div class="step-top-row">
+                <div class="step-svg-wrap">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="step-num">2</div>
+              </div>
+              <strong>Tercih Ettiğin Oyunu Seç</strong>
+              <p>Kelimelik, Çengel Bulmaca, Hızlı Test, Eşleştirme veya Harf Avı arasından dilediğiniz modu başlatın.</p>
+            </div>
+
+            <div class="step-card">
+              <div class="step-top-row">
+                <div class="step-svg-wrap">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <div class="step-num">3</div>
+              </div>
+              <strong>Eğlenerek Ezberle</strong>
+              <p>Zamana ve puanlara karşı yarışırken takıldığınızda ipuçlarından faydalanarak kelimeleri pekiştirin.</p>
+            </div>
+
+            <div class="step-card">
+              <div class="step-top-row">
+                <div class="step-svg-wrap">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <div class="step-num">4</div>
+              </div>
+              <strong>Gelişimini İncele</strong>
+              <p>İstatistikler sayfasından oyun bazlı başarı oranlarınızı, rekorlarınızı ve kelime dağarcığınızı takip edin.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer how-footer">
+          <button type="button" id="btnHowToPlayGoSettings" class="btn btn-secondary btn-sm">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            <span>Veri Havuzu Yönetimi Rehberi</span>
+          </button>
+          <button type="button" id="btnHowToPlayStart" class="btn btn-primary btn-sm">
+            <span>Hemen Oyna</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. İstatistikleri Oyun Bazında Gösteren Sayfa (Görsel 4 "Mekanik Bey" Tarzı) -->
+    <div class="modal-backdrop hidden" id="statsModal">
+      <div class="modal-card modern-stats-card" role="dialog" aria-modal="true" aria-labelledby="statsModalTitle">
+        <div class="modal-header stats-header">
+          <div class="stats-header-left">
+            <div class="stats-avatar-circle">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            </div>
+            <div>
+              <h2 id="statsModalTitle">İstatistikler</h2>
+            </div>
+          </div>
+          <button type="button" id="btnCloseStatsModal" class="btn-icon" aria-label="Kapat">✕</button>
+        </div>
+
+        <div class="pool-modal-scroll-area stats-modal-body">
+          <!-- 3 Adet Renkli Halka / Gösterge (Görsel 4 esintisi) -->
+          <div class="stats-gauges-row">
+            <div class="gauge-card gauge-coral">
+              <div class="gauge-circle">
+                <span class="gauge-val" id="stGaugeWords">721</span>
+              </div>
+              <span class="gauge-label">Sözcük Dağarcığı</span>
+              <small class="gauge-sub">Aktif Kelime</small>
+            </div>
+
+            <div class="gauge-card gauge-blue">
+              <div class="gauge-circle">
+                <span class="gauge-val" id="stGaugeSuccess">%0</span>
+              </div>
+              <span class="gauge-label">Başarı Oranı</span>
+              <small class="gauge-sub">Ortalama Doğruluk</small>
+            </div>
+
+            <div class="gauge-card gauge-emerald">
+              <div class="gauge-circle">
+                <span class="gauge-val" id="stGaugeGames">0</span>
+              </div>
+              <span class="gauge-label">Toplam Oyun</span>
+              <small class="gauge-sub">Tamamlanan Tur</small>
+            </div>
+          </div>
+
+          <!-- Oyun Bazında Detaylı Performans Kartları -->
+          <h3 class="stats-section-title">🎮 Oyun Bazında Başarı Tablosu</h3>
+          <div class="stats-games-grid">
+            <!-- 1. Kelimelik -->
+            <div class="stats-game-box sgb-kelimelik">
+              <div class="sgb-top">
+                <span class="sgb-icon">
+                  <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="28" height="28"><rect x="40" y="40" width="432" height="432" rx="64" fill="#f59e0b"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#fbbf24"/><path d="M160 140h48v100l80-100h60l-88 108 96 124h-62l-86-112v112h-48z" fill="#78350f"/><text x="345" y="380" font-family="system-ui, sans-serif" font-weight="900" font-size="105" fill="#92400e">1</text></svg>
+                </span>
+                <strong>Kelimelik</strong>
+              </div>
+              <div class="sgb-metrics">
+                <div><span>En Yüksek Skor</span><strong id="stKelimelikHigh">0 P</strong></div>
+                <div><span>Üretilen Kelime</span><strong id="stKelimelikSolved">0</strong></div>
+                <div><span>Oynanan Tur</span><strong id="stKelimelikGames">0</strong></div>
+              </div>
+            </div>
+
+            <!-- 2. Çengel Bulmaca -->
+            <div class="stats-game-box sgb-crossword">
+              <div class="sgb-top">
+                <span class="sgb-icon">
+                  <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="28" height="28"><rect x="40" y="40" width="432" height="432" rx="64" fill="#10b981"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#34d399"/><path d="M120 120h80v80h-80zM216 120h80v80h-80zM312 120h80v80h-80zM216 216h80v80h-80zM216 312h80v80h-80zM120 312h80v80h-80z" fill="#ffffff"/><polygon points="256 142 272 168 240 168" fill="#047857"/><polygon points="256 370 272 344 240 344" fill="#047857"/><polygon points="142 160 168 144 168 176" fill="#047857"/></svg>
+                </span>
+                <strong>Çengel Bulmaca</strong>
+              </div>
+              <div class="sgb-metrics">
+                <div><span>En Yüksek Puan</span><strong id="stCrosswordHigh">0 P</strong></div>
+                <div><span>Çözülen Bulmaca</span><strong id="stCrosswordSolved">0</strong></div>
+                <div><span>İpucusuz Seri</span><strong id="stCrosswordStreak">0</strong></div>
+              </div>
+            </div>
+
+            <!-- 3. Hızlı Kelime Testi -->
+            <div class="stats-game-box sgb-quiz">
+              <div class="sgb-top">
+                <span class="sgb-icon">
+                  <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="28" height="28"><rect x="40" y="40" width="432" height="432" rx="64" fill="#8b5cf6"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#a78bfa"/><circle cx="256" cy="256" r="145" fill="#6d28d9"/><polygon points="280 110 170 270 245 270 215 402 342 232 268 232" fill="#fde047" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"/></svg>
+                </span>
+                <strong>Hızlı Kelime Testi</strong>
+              </div>
+              <div class="sgb-metrics">
+                <div><span>En Yüksek Seri</span><strong id="stQuizStreak">0x</strong></div>
+                <div><span>Çözülen Soru</span><strong id="stQuizSolved">0</strong></div>
+                <div><span>Test Puanı</span><strong id="stQuizHigh">0 P</strong></div>
+              </div>
+            </div>
+
+            <!-- 4. Kelime Eşleştirme -->
+            <div class="stats-game-box sgb-match">
+              <div class="sgb-top">
+                <span class="sgb-icon">
+                  <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="28" height="28"><rect x="40" y="40" width="432" height="432" rx="64" fill="#ec4899"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#f472b6"/><rect x="115" y="160" width="160" height="230" rx="20" transform="rotate(-14 195 275)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/><rect x="235" y="140" width="160" height="230" rx="20" transform="rotate(14 315 255)" fill="#ffffff" stroke="#9d174d" stroke-width="10"/><circle cx="195" cy="275" r="32" fill="#ef4444"/><polygon points="315 224 327 248 353 252 334 270 338 296 315 284 292 296 296 270 277 252 303 248" fill="#eab308"/></svg>
+                </span>
+                <strong>Kelime Eşleştirme</strong>
+              </div>
+              <div class="sgb-metrics">
+                <div><span>Tamamlanan Tur</span><strong id="stMatchGames">0</strong></div>
+                <div><span>En Düşük Hamle</span><strong id="stMatchBestMoves">-</strong></div>
+                <div><span>Toplam Puan</span><strong id="stMatchHigh">0 P</strong></div>
+              </div>
+            </div>
+
+            <!-- 5. Harf Avı -->
+            <div class="stats-game-box sgb-scramble">
+              <div class="sgb-top">
+                <span class="sgb-icon">
+                  <svg viewBox="0 0 512 512" class="gi-svg-brand" aria-hidden="true" width="28" height="28"><rect x="40" y="40" width="432" height="432" rx="64" fill="#0284c7"/><rect x="60" y="60" width="392" height="392" rx="50" fill="#38bdf8"/><circle cx="256" cy="256" r="145" fill="none" stroke="#e0f2fe" stroke-width="16" stroke-dasharray="24 16"/><circle cx="256" cy="148" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="240" y="163" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">A</text><circle cx="348" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="333" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">B</text><circle cx="164" cy="296" r="42" fill="#ffffff" stroke="#0369a1" stroke-width="6"/><text x="149" y="311" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="#0369a1">C</text><polygon points="256 220 276 276 256 264 236 276" fill="#facc15"/></svg>
+                </span>
+                <strong>Harf Avı (Kelime Kur)</strong>
+              </div>
+              <div class="sgb-metrics">
+                <div><span>Çözülen Kelime</span><strong id="stScrambleSolved">0</strong></div>
+                <div><span>En Yüksek Seri</span><strong id="stScrambleStreak">0x</strong></div>
+                <div><span>Toplam Puan</span><strong id="stScrambleHigh">0 P</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer stats-footer">
+          <button type="button" id="btnResetAllStats" class="btn btn-danger-outline btn-sm">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true" style="color:#ef4444;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span>İstatistikleri Sıfırla</span>
+          </button>
+          <button type="button" id="btnCloseStatsModalBtn" class="btn btn-primary btn-sm">
+            <span>Tamam</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop confirm-backdrop hidden" id="warningModal">
+      <div class="modal-card confirm-card" role="alertdialog" aria-modal="true" aria-labelledby="warningTitle" aria-describedby="warningMessage">
+        <div class="confirm-icon-wrap">⚠️</div>
+        <h3 id="warningTitle">Seçili Havuzda Yeterli Kelime Yok!</h3>
+        <p id="warningMessage">Seçtiğiniz soru sayısı için yeterli kelime bulunmuyor.</p>
+        <div class="confirm-actions">
+          <button type="button" id="btnWarningOk" class="btn btn-primary">👍 Tamam, Anladım</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Karşılama ve Kullanım Rehberi Modalı -->
+    <div class="modal-backdrop hidden" id="welcomeModal">
+      <div class="modal-card welcome-card">
+        <div class="welcome-header">
+          <div class="welcome-logo">
+            <img src="icon.svg" alt="English is easy İkonu" width="54" height="54" />
+          </div>
+          <div>
+            <h2>🎉 English is easy’ye Hoş Geldiniz!</h2>
+            <p>İngilizce ve Türkçe kelime dağarcığınızı farklı oyunlarla eğlenerek geliştireceğiniz interaktif platform rehberi:</p>
+          </div>
+        </div>
+
+        <div class="welcome-features">
+          <div class="welcome-item">
+            <div class="welcome-icon">🎵</div>
+            <div class="welcome-text">
+              <h3>Her Oyuna Özel Odaklanma Müziği ve Çoklu Konu Seçimi</h3>
+              <p>Ana sayfada ve her oyunda birbirinden farklı, odaklanmaya yardımcı özel arkaplan müzikleri yer alır; üstteki <strong>🎵 Müzik</strong> butonuyla istediğiniz an açıp kapatabilirsiniz. Ayrıca her oyunun içindeki <strong>🎯 Konu</strong> kutusundan bir veya birden fazla veri havuzu seçebilirsiniz.</p>
+            </div>
+          </div>
+
+          <div class="welcome-item">
+            <div class="welcome-icon">💡</div>
+            <div class="welcome-text">
+              <h3>Nokta (.) Tuşu ile Hızlı İpucu</h3>
+              <p><strong>Çengel Bulmaca</strong>, <strong>Kelime Eşleştirme</strong> ve <strong>Harf Avı</strong> oyunlarında klavyeden <strong>nokta (<code>.</code>)</strong> tuşuna basarak veya <strong>💡 İpucu</strong> butonuna dokunarak anında ipucu alabilirsiniz.</p>
+            </div>
+          </div>
+
+          <div class="welcome-item">
+            <div class="welcome-icon">🎆</div>
+            <div class="welcome-text">
+              <h3>Soru Sayısı Seçimi ve 5’li Seri Kutlamaları</h3>
+              <p><strong>Hızlı Kelime Testi</strong> ve <strong>Harf Avı</strong> oyunlarında hedef soru sayısını belirleyip geri sayımla yarışabilirsiniz. Testte her 5 ve katları doğru serisinde havai fişek ve konfeti animasyonları sizi karşılar!</p>
+            </div>
+          </div>
+
+          <div class="welcome-item">
+            <div class="welcome-icon">⚙️</div>
+            <div class="welcome-text">
+              <h3>Ortak Veri Tabanı ve Ayarlar</h3>
+              <p>Ana sayfadaki <strong>⚙️ Ayarlar</strong> butonundan istediğiniz havuza yeni kelime ekleyebilir, yeni havuz oluşturabilir ve <strong>İçe / Dışa Aktar</strong> sayfasından arkadaşlarınızla paylaşabilirsiniz.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="welcome-footer">
+          <label class="dont-show-label" for="chkDontShowWelcome">
+            <input type="checkbox" id="chkDontShowWelcome" />
+            <span>Bu karşılama ekranını bir daha gösterme</span>
+          </label>
+          <button type="button" id="btnCloseWelcome" class="btn btn-primary btn-welcome-start">
+            🚀 Keşfetmeye Başla
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oyun Özel Rehber / Yardım Modalı -->
+    <div class="modal-backdrop hidden" id="gameHelpModal">
+      <div class="modal-card welcome-card">
+        <div class="welcome-header">
+          <div class="welcome-logo" id="gameHelpLogo">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <h2 id="gameHelpTitle">Nasıl Oynanır?</h2>
+            <p id="gameHelpSub">Oyun kuralları, ipuçları ve puanlama rehberi:</p>
+          </div>
+          <button type="button" class="btn-icon" id="btnCloseGameHelp" aria-label="Kapat">✕</button>
+        </div>
+        <div class="welcome-features" id="gameHelpBody"></div>
+        <div class="welcome-footer" style="justify-content: flex-end;">
+          <button type="button" class="btn btn-primary" id="btnOkGameHelp">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Anladım, Oyna!</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Puan Tablosu (Leaderboard / Geçmiş Skorlar) Modalı -->
+    <div class="modal-backdrop hidden" id="leaderboardModal">
+      <div class="modal-card leaderboard-card">
+        <div class="modal-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <div>
+              <h2 id="leaderboardTitle" style="margin:0;">Puan Tablosu</h2>
+              <p id="leaderboardSub" style="margin:2px 0 0 0;">Bu oyundaki en yüksek skorlarınız ve geçmiş başarılarınız:</p>
+            </div>
+          </div>
+          <button type="button" class="btn-icon" id="btnCloseLeaderboard" aria-label="Kapat">✕</button>
+        </div>
+        <div class="leaderboard-body" id="leaderboardBody">
+          <div class="leaderboard-list" id="leaderboardList"></div>
+        </div>
+        <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn btn-danger-outline btn-sm" id="btnResetLeaderboard">
+            <svg viewBox="0 0 24 24" class="btn-svg-icon" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span>Geçmişi Sıfırla</span>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnCloseLeaderboardBtn">
+            <span>Kapat</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Silme İşlemleri İçin "Emin misiniz?" Onay Modalı -->
+    <div class="modal-backdrop confirm-backdrop hidden" id="confirmModal">
+      <div class="modal-card confirm-card" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <div class="confirm-icon-wrap">⚠️</div>
+        <h3 id="confirmTitle">Silme İşlemini Onaylıyor musunuz?</h3>
+        <p id="confirmMessage">Bu öğeyi silmek istediğinize emin misiniz?</p>
+        <div class="confirm-actions">
+          <button type="button" id="btnConfirmCancel" class="btn btn-secondary">❌ Vazgeç</button>
+          <button type="button" id="btnConfirmYes" class="btn btn-danger">✅ Evet, Sil</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tebrikler Bildirimi (Yedek) -->
+    <div class="toast hidden" id="victoryToast">
+      <div class="toast-content">
+        <span class="toast-icon">🏆</span>
+        <div>
+          <strong>Muhteşem! Bulmacayı Tamamladın! 🎉</strong>
+          <p>Tüm Türkçe ve İngilizce kelimeleri eksiksiz çözdün!</p>
+        </div>
+        <button id="btnToastNew" class="btn btn-primary btn-sm">🎲 Yeni Bulmaca</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="text" id="hiddenMobileInput" class="sr-only-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" />
+
+  <!-- Evrensel Uçan Bildirim (Toast) -->
+  <div id="appFloatingToast" class="floating-app-toast hidden" aria-live="polite"></div>
+
+  <script src="words.js"></script>
+  <script src="chatbot-engine.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
